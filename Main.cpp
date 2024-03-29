@@ -1,5 +1,5 @@
 /*
-Práctica 5: Optimización y Carga de Modelos
+Proyecto Compu Gráfica
 */
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
@@ -34,7 +34,8 @@ std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
 Camera camera;
-Model Coche, Capo, Llanta;
+// Edificios
+Model KameHouse, Capsule, CasaBob, CasaCalamardo;
 
 Skybox skybox;
 
@@ -107,6 +108,66 @@ void CreateShaders()
 	shaderList.push_back(*shader1);
 }
 
+void LoadModels() {
+	KameHouse = Model();
+	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
+	Capsule = Model();
+	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
+	CasaBob = Model();
+	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
+	CasaCalamardo = Model();
+	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
+}
+
+void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, glm::vec3 color, GLuint uniformModel, GLuint uniformColor) {
+
+	// *********************************************************************
+			// Capsule Corp
+	// *********************************************************************
+	color = glm::vec3(0.5f, 0.5f, 1.0f);
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -200.0f));
+	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	Capsule.RenderModel();
+
+	// *********************************************************************
+			// Capsule Bob Esponja
+	// *********************************************************************
+
+	model = modelaux;
+	color = glm::vec3(1.0f, 1.0f, 0.5f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -300.0f));
+	model = glm::scale(model, glm::vec3(15.0f, 15.0f, 15.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	CasaBob.RenderModel();
+
+	// *********************************************************************
+			// Casa Calamardo
+	// *********************************************************************
+
+	model = modelaux;
+	color = glm::vec3(0.5f, 0.5f, 1.0f);
+	model = glm::translate(model, glm::vec3(150.0f, 0.0f, -300.0f));
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	CasaCalamardo.RenderModel();
+
+	// *********************************************************************
+			// Kame House
+	// *********************************************************************
+	
+	model = modelaux;
+	color = glm::vec3(1.0f, 0.5f, 0.5f);
+	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
+	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	KameHouse.RenderModel();
+}
+
 
 
 int main()
@@ -117,14 +178,9 @@ int main()
 	CreateObjects();
 	CreateShaders();
 
-	camera = Camera(glm::vec3(12.0f, 15.0f, 9.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.3f, 1.0f);
+	LoadModels();
 
-	Coche = Model();
-	Coche.LoadModel("Models/coche.obj");
-	Capo = Model();
-	Capo.LoadModel("Models/capo.obj");
-	Llanta = Model();
-	Llanta.LoadModel("Models/llanta.obj");
+	camera = Camera(glm::vec3(0.0f, 100.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 3.0f, 1.0f);
 
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
@@ -177,10 +233,18 @@ int main()
 		color = glm::vec3(0.5f, 0.5f, 0.5f); //piso de color gris
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		modelaux = model;
+		model = glm::scale(model, glm::vec3(40.0f, 1.0f, 40.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		meshList[2]->RenderMesh();
+
+		model = modelaux;
+
+		//*****************************************************************
+				// CARGA LOS EDIFICIOS
+		//*****************************************************************
+		RenderEdificios(model, modelaux,color, uniformModel, uniformColor);
 
 		glUseProgram(0);
 

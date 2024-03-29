@@ -49,7 +49,7 @@ int Window::Initialise()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//CREAR VENTANA
-	mainWindow = glfwCreateWindow(width, height, "Practica 05: Optimizacion y Carga de Modelos", NULL, NULL);
+	mainWindow = glfwCreateWindow(width, height, "Proyecto Compu Gráfica", NULL, NULL);
 
 	if (!mainWindow)
 	{
