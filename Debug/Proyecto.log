@@ -1,0 +1,11 @@
+﻿  Main.cpp
+C:\Users\Hhebe\OneDrive\Documentos\8° Semestre\Compu Grafica\Proyecto\Visual\Proyecto\Window.h(12,36): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "Main.cpp")
+  
+C:\Users\Hhebe\OneDrive\Documentos\8° Semestre\Compu Grafica\Proyecto\Visual\Proyecto\Window.h(13,37): warning C4244: 'return': conversión de 'GLint' a 'GLfloat'; posible pérdida de datos
+  (compilando archivo de origen "Main.cpp")
+  
+C:\Users\Hhebe\OneDrive\Documentos\8° Semestre\Compu Grafica\Proyecto\Visual\Proyecto\Main.cpp(300,15): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+C:\Users\Hhebe\OneDrive\Documentos\8° Semestre\Compu Grafica\Proyecto\Visual\Proyecto\Main.cpp(302,33): warning C4244: '+=': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+LINK : warning LNK4098: la biblioteca predeterminada'MSVCRT' entra en conflicto con otras bibliotecas; use la biblioteca /NODEFAULTLIB:biblioteca
+  Proyecto.vcxproj -> C:\Users\Hhebe\OneDrive\Documentos\8° Semestre\Compu Grafica\Proyecto\Visual\Debug\Proyecto_CG.exe
