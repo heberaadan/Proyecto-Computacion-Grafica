@@ -1,5 +1,8 @@
 #include "Window.h"
 
+
+// Ejemplo github
+
 Window::Window()
 {
 	width = 800;
