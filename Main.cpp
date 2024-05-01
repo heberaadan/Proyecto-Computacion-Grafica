@@ -53,7 +53,7 @@ Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
 // Puertas
 Model LionGate;
 
-Skybox skybox;
+Skybox skybox, skyboxNigth;
 
 //materiales
 Material Material_brillante;
@@ -66,7 +66,7 @@ GLfloat lastTime = 0.0f;
 static double limitFPS = 1.0 / 60.0;
 
 // luz direccional
-DirectionalLight mainLight;
+DirectionalLight mainLight, mainLightNigth;
 //para declarar varias luces de tipo pointlight
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -106,8 +106,6 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
 	}
 }
-
-
 
 void CreateObjects()
 {
@@ -216,40 +214,40 @@ void CreateCubeMesh()
 		//x		y		z		S		T			NX		NY		NZ
 		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//0
 		0.5f, -0.5f,  0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//1
-		0.5f,  0.5f,  0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//2
-		-0.5f,  0.5f,  0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//3
+		0.5f,  0.5f,  0.5f,		0.0f, 3.0f,			0.0f,	0.0f,	-1.0f,	//2
+		-0.5f,  0.5f,  0.5f,	3.0f, 3.0f,			0.0f,	0.0f,	-1.0f,	//3
 		// right
 		//x		y		z		S		T
-		0.5f, -0.5f,  0.5f,	    0.0f, 0.0f,				-1.0f,	0.0f,	0.0f,
+		0.5f, -0.5f,  0.5f,	    0.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
 		0.5f, -0.5f,  -0.5f,	3.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
-		0.5f,  0.5f,  -0.5f,	0.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
-		0.5f,  0.5f,  0.5f,	    3.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  -0.5f,	0.0f, 3.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  0.5f,	    3.0f, 3.0f,			-1.0f,	0.0f,	0.0f,
 		// back
-		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,				0.0f,	0.0f,	1.0f,
+		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	1.0f,
 		0.5f, -0.5f, -0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	1.0f,
-		0.5f,  0.5f, -0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	1.0f,
-		-0.5f,  0.5f, -0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+		0.5f,  0.5f, -0.5f,		0.0f, 3.0f,			0.0f,	0.0f,	1.0f,
+		-0.5f,  0.5f, -0.5f,	3.0f, 3.0f,			0.0f,	0.0f,	1.0f,
 
 		// left
 		//x		y		z		S		T
-		-0.5f, -0.5f,  -0.5f,	0.0f, 0.0f,				1.0f,	0.0f,	0.0f,
+		-0.5f, -0.5f,  -0.5f,	0.0f, 0.0f,			1.0f,	0.0f,	0.0f,
 		-0.5f, -0.5f,  0.5f,	3.0f, 0.0f,			1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  0.5f,	0.0f, 2.0f,			1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  -0.5f,	3.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  0.5f,	0.0f, 3.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  -0.5f,	3.0f, 3.0f,			1.0f,	0.0f,	0.0f,
 
 		// bottom
 		//x		y		z		S		T
 		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	1.0f,	0.0f,
 		0.5f,  -0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	1.0f,	0.0f,
-		 0.5f,  -0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	1.0f,	0.0f,
-		-0.5f, -0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+		 0.5f,  -0.5f,  -0.5f,	0.0f, 3.0f,			0.0f,	1.0f,	0.0f,
+		-0.5f, -0.5f,  -0.5f,	3.0f, 3.0f,			0.0f,	1.0f,	0.0f,
 
 		//UP
 		 //x		y		z		S		T
 		 -0.5f, 0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	-1.0f,	0.0f,
 		 0.5f,  0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	-1.0f,	0.0f,
-		  0.5f, 0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
-		 -0.5f, 0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+		  0.5f, 0.5f,  -0.5f,	0.0f, 3.0f,			0.0f,	-1.0f,	0.0f,
+		 -0.5f, 0.5f,  -0.5f,	3.0f, 3.0f,			0.0f,	-1.0f,	0.0f,
 
 	};
 
@@ -510,6 +508,7 @@ int main()
 	LoadModels();
 
 	std::vector<std::string> skyboxFaces;
+
 	skyboxFaces.push_back("Textures/Skybox/sqpantsrt.tga");
 	skyboxFaces.push_back("Textures/Skybox/sqpantslf.tga");
 	skyboxFaces.push_back("Textures/Skybox/sqpantsdn.tga");
@@ -519,6 +518,19 @@ int main()
 
 	skybox = Skybox(skyboxFaces);
 
+	// CARGA EL SKYBOX DE NOCHE
+
+	std::vector<std::string> skyboxFacesN;
+
+	skyboxFacesN.push_back("Textures/Skybox/sqpantsrt_N.tga");
+	skyboxFacesN.push_back("Textures/Skybox/sqpantslf_N.tga");
+	skyboxFacesN.push_back("Textures/Skybox/sqpantsdn_N.tga");
+	skyboxFacesN.push_back("Textures/Skybox/sqpantsup_N.tga");
+	skyboxFacesN.push_back("Textures/Skybox/sqpantsbk_N.tga");
+	skyboxFacesN.push_back("Textures/Skybox/sqpantsft_N.tga");
+
+	skyboxNigth = Skybox(skyboxFacesN);
+
 	Material_brillante = Material(4.0f, 256);
 	Material_opaco = Material(0.3f, 4);
 
@@ -526,6 +538,10 @@ int main()
 	//luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.6f, 0.6f,
+		0.0f, 0.0f, -1.0f);
+
+	mainLightNigth = DirectionalLight(1.0f, 1.0f, 1.0f,
+		0.2f, 0.1f,
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
@@ -562,6 +578,9 @@ int main()
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
+
+	int n = 1; // Para controlar el tiempo de día y noche
+
 	while (!mainWindow.getShouldClose())
 	{
 		GLfloat now = glfwGetTime();
@@ -577,7 +596,17 @@ int main()
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+
+		if(now >= 24 * n && now < 24 * (n + 1)) { // DIA
+			skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		}
+		else if (now >= 24 * (n + 1) && now < 24 * (n + 2)) { // NOCHE
+			skyboxNigth.DrawSkybox(camera.calculateViewMatrix(), projection);
+		}
+		else {
+			n = n + 2;
+		}
+
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -600,7 +629,16 @@ int main()
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
-		shaderList[0].SetDirectionalLight(&mainLight);
+		if (now >= 24 * n && now < 24 * (n + 1)) {
+			shaderList[0].SetDirectionalLight(&mainLight);
+		}
+		else if (now >= 24 * (n + 1) && now < 24 * (n + 2)) {
+			shaderList[0].SetDirectionalLight(&mainLightNigth);
+		}
+		else {
+			n = n + 2;
+		}
+		
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
@@ -629,7 +667,7 @@ int main()
 		RenderEdificios(model, modelaux, uniformModel);
 
 		//*****************************************************************
-				// CARGA LOS EDIFICIOS
+				// CARGA LOS PERSONAJES
 		//*****************************************************************
 
 		RenderPersonajes(model, modelaux, uniformModel);
