@@ -42,12 +42,16 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
-Texture pisoTexture;
+Texture pisoTexture, brickTexture;
 
 // Edificios
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
+
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
+
+// Puertas
+Model LionGate;
 
 Skybox skybox;
 
@@ -102,6 +106,7 @@ void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat
 		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
 	}
 }
+
 
 
 void CreateObjects()
@@ -176,6 +181,83 @@ void CreateObjects()
 
 }
 
+//meshList[4]
+void CreateCubeMesh()
+{
+
+	unsigned int cubo_indices[] = {
+		// front
+		0, 1, 2,
+		2, 3, 0,
+
+		// back
+		8, 9, 10,
+		10, 11, 8,
+
+		// left
+		12, 13, 14,
+		14, 15, 12,
+		// bottom
+		16, 17, 18,
+		18, 19, 16,
+		// top
+		20, 21, 22,
+		22, 23, 20,
+
+		// right
+		4, 5, 6,
+		6, 7, 4,
+
+	};
+
+	//TODO: La textura de ladrillo aparece rotada en el subo
+	GLfloat cubo_vertices[] = {
+		// front
+		//x		y		z		S		T			NX		NY		NZ
+		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//0
+		0.5f, -0.5f,  0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//1
+		0.5f,  0.5f,  0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//2
+		-0.5f,  0.5f,  0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//3
+		// right
+		//x		y		z		S		T
+		0.5f, -0.5f,  0.5f,	    0.0f, 0.0f,				-1.0f,	0.0f,	0.0f,
+		0.5f, -0.5f,  -0.5f,	3.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  -0.5f,	0.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  0.5f,	    3.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		// back
+		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,				0.0f,	0.0f,	1.0f,
+		0.5f, -0.5f, -0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	1.0f,
+		0.5f,  0.5f, -0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+		-0.5f,  0.5f, -0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+
+		// left
+		//x		y		z		S		T
+		-0.5f, -0.5f,  -0.5f,	0.0f, 0.0f,				1.0f,	0.0f,	0.0f,
+		-0.5f, -0.5f,  0.5f,	3.0f, 0.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  0.5f,	0.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  -0.5f,	3.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+
+		// bottom
+		//x		y		z		S		T
+		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	1.0f,	0.0f,
+		0.5f,  -0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	1.0f,	0.0f,
+		 0.5f,  -0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+		-0.5f, -0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+
+		//UP
+		 //x		y		z		S		T
+		 -0.5f, 0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	-1.0f,	0.0f,
+		 0.5f,  0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	-1.0f,	0.0f,
+		  0.5f, 0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+		 -0.5f, 0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+
+	};
+
+	Mesh* dado = new Mesh();
+	dado->CreateMesh(cubo_vertices, cubo_indices, 192, 36);
+	meshList.push_back(dado);
+
+}
 
 void CreateShaders()
 {
@@ -185,6 +267,7 @@ void CreateShaders()
 }
 
 void LoadModels() {
+	
 	// Edificios
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
@@ -200,6 +283,7 @@ void LoadModels() {
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
 	CasaSaitama.LoadModel("Models/OnePunchMan/Departamento Saitama/CasaSaitama.obj");
+	
 	// Personajes
 	Roshi = Model();
 	Roshi.LoadModel("Models/DragonBall/MaestroRoshi/Roshi.obj");
@@ -213,6 +297,10 @@ void LoadModels() {
 	Karin.LoadModel("Models/DragonBall/Karin/Karin.obj");
 	Overgrown = Model();
 	Overgrown.LoadModel("Models/OnePunchMan/Overgrown/Overgrown.obj");
+
+	// Puertas
+	LionGate = Model();
+	LionGate.LoadModel("Models/gate.obj");
 }
 
 void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
@@ -222,8 +310,9 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 			// Capsule Corp
 	// *********************************************************************
 
-	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -200.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -150.0f));
+	// Por ahora se usa esto, lo mejor seria escalar el modelo directo en 3DSMax
+	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Capsule.RenderModel();
 
@@ -232,7 +321,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -300.0f));
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -200.0f));
 	casa = model;
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -273,7 +362,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 	
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(30.0f, 0.0f, 30.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaSaitama.RenderModel();
 }
@@ -344,6 +433,62 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	Overgrown.RenderModel();
 }
 
+/*
+	Este metodo va a crear varias instancias del cubo para formar las paredes. Esto
+	evitara tener que mover la textura si queremos hacer paredes de diferentes tamanos
+*/
+void buildWall(int size, glm::vec3 dir, glm::mat4* model, GLuint uniformModel, GLuint uniformColor, Texture* texture,
+	GLuint uniformSpecularIntensity, GLuint uniformShininess, glm::vec3 color) {
+	for (int i = 0; i < size; i++) {
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(*model));
+		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+		(*texture).UseTexture();
+		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
+		meshList[4]->RenderMesh();
+		*model = glm::translate(*model, dir);
+	}
+}
+
+void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* brickTexture,
+	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
+
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::mat4 wallModelAux(1.0);
+	model = glm::translate(model, glm::vec3(-10.0f, 3.5f, 275.0f));
+	wallModelAux = model;
+
+	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
+	model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));
+	buildWall(13, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
+	model = glm::translate(model, glm::vec3(-0.5f, 0.0f, 0.0f));
+	buildWall(14, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(2.0f, 7.0f, 20.0f));
+	model = glm::translate(model, glm::vec3(140.0f, 0.0f, -0.5f));
+	buildWall(28, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(2.0f, 7.0f, 20.0f));
+	model = glm::translate(model, glm::vec3(-140.0f, 0.0f, -0.5f));
+	buildWall(28, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
+	model = glm::translate(model, glm::vec3(-13.5f, 0.0f, -280.0f));
+	buildWall(28, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	// Puerta Principal
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(0.35f, 0.4f, 0.5f));
+	model = glm::translate(model, glm::vec3(30.0f, -9.0f, 2.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LionGate.RenderModel();
+}
+
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -351,11 +496,16 @@ int main()
 
 	CreateObjects();
 	CreateShaders();
+	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 0.7f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 0.0f, 290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
 	
 	pisoTexture = Texture("Textures/Skybox/sqpantsdn.tga");
 	pisoTexture.LoadTextureA();
+
+
+	brickTexture = Texture("Textures/brick2.png");
+	brickTexture.LoadTextureA();
 
 	LoadModels();
 
@@ -484,6 +634,12 @@ int main()
 
 		RenderPersonajes(model, modelaux, uniformModel);
 
+		//*****************************************************************
+				// CARGA PAREDES EXTERNAS DE ESCENA
+		//*****************************************************************
+
+		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+		
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
