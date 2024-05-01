@@ -46,8 +46,12 @@ Texture pisoTexture, brickTexture;
 
 // Edificios
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
+
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
+
+// Puertas
+Model LionGate;
 
 Skybox skybox;
 
@@ -263,6 +267,7 @@ void CreateShaders()
 }
 
 void LoadModels() {
+	
 	// Edificios
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
@@ -278,6 +283,7 @@ void LoadModels() {
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
 	CasaSaitama.LoadModel("Models/OnePunchMan/Departamento Saitama/CasaSaitama.obj");
+	
 	// Personajes
 	Roshi = Model();
 	Roshi.LoadModel("Models/DragonBall/MaestroRoshi/Roshi.obj");
@@ -291,6 +297,10 @@ void LoadModels() {
 	Karin.LoadModel("Models/DragonBall/Karin/Karin.obj");
 	Overgrown = Model();
 	Overgrown.LoadModel("Models/OnePunchMan/Overgrown/Overgrown.obj");
+
+	// Puertas
+	LionGate = Model();
+	LionGate.LoadModel("Models/gate.obj");
 }
 
 void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
@@ -471,6 +481,12 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::translate(model, glm::vec3(-13.5f, 0.0f, -280.0f));
 	buildWall(28, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
+	// Puerta Principal
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(0.35f, 0.4f, 0.5f));
+	model = glm::translate(model, glm::vec3(30.0f, -9.0f, 2.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LionGate.RenderModel();
 }
 
 int main()
