@@ -50,6 +50,9 @@ Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
 
+//Vehículos
+Model Cangremovil, Bicicleta, Nube;
+
 // Puertas
 Model LionGate;
 
@@ -267,34 +270,43 @@ void CreateShaders()
 void LoadModels() {
 	
 	// Edificios
+	/*
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
 	Capsule = Model();
-	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
+	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
-	Flores = Model();
-	Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
-	Piedra = Model();
-	Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
+	//Flores = Model();
+	//Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
+	//Piedra = Model();
+	//Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
 	CasaCalamardo = Model();
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
-	CasaSaitama.LoadModel("Models/OnePunchMan/Departamento Saitama/CasaSaitama.obj");
+	CasaSaitama.LoadModel("Models/OnePunchMan/CasaSaitama/CasaSaitama.obj");
 	
 	// Personajes
 	Roshi = Model();
-	Roshi.LoadModel("Models/DragonBall/MaestroRoshi/Roshi.obj");
-	Bob = Model();
-	Bob.LoadModel("Models/BobEsponja/Bob/bob.obj");
-	Calamardo = Model();
-	Calamardo.LoadModel("Models/BobEsponja/Calamardo/Deltarune.obj");
-	Gary = Model();
-	Gary.LoadModel("Models/BobEsponja/Gary/Gary.obj");
+	Roshi.LoadModel("Models/DragonBall/MaestroRoshi/MaestroRoshi.obj");
 	Karin = Model();
 	Karin.LoadModel("Models/DragonBall/Karin/Karin.obj");
+	Bob = Model();
+	Bob.LoadModel("Models/BobEsponja/Bob/BobEsponja.obj");
+	Calamardo = Model();
+	Calamardo.LoadModel("Models/BobEsponja/Calamardo/Calamardo.obj");
+	Gary = Model();
+	Gary.LoadModel("Models/BobEsponja/Gary/Gary.obj");
 	Overgrown = Model();
 	Overgrown.LoadModel("Models/OnePunchMan/Overgrown/Overgrown.obj");
+
+	// Vehículos
+	Cangremovil = Model();
+	Cangremovil.LoadModel("Models/BobEsponja/Cangremovil/Cangremovil.obj");
+	Bicicleta = Model();
+	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/Bicicleta.obj");
+	Nube = Model();
+	Nube.LoadModel("Models/DragonBall/Nube/Nube.obj");
 
 	// Puertas
 	LionGate = Model();
@@ -307,24 +319,25 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Capsule Corp
 	// *********************************************************************
-
+	/*
 	model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -150.0f));
 	// Por ahora se usa esto, lo mejor seria escalar el modelo directo en 3DSMax
 	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Capsule.RenderModel();
-
+	*/
 	// *********************************************************************
 			// Capsule Bob Esponja
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -200.0f));
-	casa = model;
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//casa = model; no sé que es esta linea
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaBob.RenderModel();
-
+	/*
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -333,34 +346,37 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Piedra.RenderModel();
+	Piedra.RenderModel();*/
 
 	// *********************************************************************
 			// Casa Calamardo
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(150.0f, 0.0f, -300.0f));
-	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -100.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.7f, 1.7f, 1.7f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaCalamardo.RenderModel();
 
 	// *********************************************************************
 			// Kame House
 	// *********************************************************************
-
+	/*
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
 	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
-
+	*/
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
 	
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(30.0f, 0.0f, 30.0f));
+	model = glm::translate(model, glm::vec3(40.0f, 0.0f, 230.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaSaitama.RenderModel();
 }
@@ -372,8 +388,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(100.0f, 0.0f, -230.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+	model = glm::translate(model, glm::vec3(-190.0f, 0.0f, -180.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Roshi.RenderModel();
 
@@ -382,8 +399,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(20.0f, 0.0f, -250.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 10.0f, 10.0f));
+	model = glm::translate(model, glm::vec3(-230.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Bob.RenderModel();
 
@@ -392,8 +410,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(150.0f, 0.0f, -250.0f));
-	model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+	model = glm::translate(model, glm::vec3(-220.0f, 0.0f, -90.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Calamardo.RenderModel();
 
@@ -402,9 +421,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(200.0f, 0.0f, 50.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -190.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Gary.RenderModel();
 
@@ -413,9 +432,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(50.0f, 0.0f, 70.0f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Karin.RenderModel();
 
@@ -424,13 +443,48 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1200.0f, 1200.0f, 1200.0f));
+	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
+	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Overgrown.RenderModel();
 }
 
+void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
+
+	// *********************************************************************
+		// Bicicleta 
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(170.0f, 0.3f, -200.0f));
+	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Bicicleta.RenderModel();
+
+	// *********************************************************************
+		// Cangremovil
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(180.0f, 1.3f, -170.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Cangremovil.RenderModel();
+
+	// *********************************************************************
+		// Nube
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(170.0f, 20.0f, -140.0f));
+	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Nube.RenderModel();
+}
 /*
 	Este metodo va a crear varias instancias del cubo para formar las paredes. Esto
 	evitara tener que mover la textura si queremos hacer paredes de diferentes tamanos
@@ -671,6 +725,12 @@ int main()
 		//*****************************************************************
 
 		RenderPersonajes(model, modelaux, uniformModel);
+
+		//*****************************************************************
+				// CARGA LOS VEHÍCULOS
+		//*****************************************************************
+
+		RenderVehiculos(model, modelaux, uniformModel);
 
 		//*****************************************************************
 				// CARGA PAREDES EXTERNAS DE ESCENA
