@@ -1,5 +1,5 @@
 /*
-Práctica 7: Iluminación 1 
+Práctica 7: Iluminación 1
 */
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
@@ -50,8 +50,12 @@ Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
 
-//Vehículos
+// Vehículos
 Model Cangremovil, Bicicleta, Nube;
+
+// Decoración 
+Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
+Model Pato, Shuriken, Bamboo;
 
 // Puertas
 Model LionGate;
@@ -159,16 +163,16 @@ void CreateObjects()
 
 
 	};
-	
-	Mesh *obj1 = new Mesh();
+
+	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
 
-	Mesh *obj2 = new Mesh();
+	Mesh* obj2 = new Mesh();
 	obj2->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj2);
 
-	Mesh *obj3 = new Mesh();
+	Mesh* obj3 = new Mesh();
 	obj3->CreateMesh(floorVertices, floorIndices, 32, 6);
 	meshList.push_back(obj3);
 
@@ -262,13 +266,13 @@ void CreateCubeMesh()
 
 void CreateShaders()
 {
-	Shader *shader1 = new Shader();
+	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 }
 
 void LoadModels() {
-	
+
 	// Edificios
 	/*
 	KameHouse = Model();
@@ -285,7 +289,7 @@ void LoadModels() {
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
 	CasaSaitama.LoadModel("Models/OnePunchMan/CasaSaitama/CasaSaitama.obj");
-	
+
 	// Personajes
 	Roshi = Model();
 	Roshi.LoadModel("Models/DragonBall/MaestroRoshi/MaestroRoshi.obj");
@@ -307,6 +311,34 @@ void LoadModels() {
 	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/Bicicleta.obj");
 	Nube = Model();
 	Nube.LoadModel("Models/DragonBall/Nube/Nube.obj");
+
+	// Decoración
+	Piedra1 = Model();
+	Piedra1.LoadModel("Models/Decoracion/Rocas/Roquita1.obj");
+	Piedra2 = Model();
+	Piedra2.LoadModel("Models/Decoracion/Rocas/Roquita2.obj");
+	Piedra3 = Model();
+	Piedra3.LoadModel("Models/Decoracion/Rocas/Roquita3.obj");
+	Piedra4 = Model();
+	Piedra4.LoadModel("Models/Decoracion/Rocas/Roquita4.obj");
+	Piedra5 = Model();
+	Piedra5.LoadModel("Models/Decoracion/Rocas/Roquita5.obj");
+	Patito = Model();
+	Patito.LoadModel("Models/Decoracion/Decoracion/Patito.obj");
+	LamparaZoo = Model();
+	LamparaZoo.LoadModel("Models/Decoracion/Decoracion/LamparaZoo.obj");
+	Kunai = Model();
+	Kunai.LoadModel("Models/Decoracion/Decoracion/Kunai.obj");
+	Leon = Model();
+	Leon.LoadModel("Models/Decoracion/Animales/Leon.obj");
+	Pato = Model();
+	Pato.LoadModel("Models/Decoracion/Animales/Pato.obj");
+	Shuriken = Model();
+	Shuriken.LoadModel("Models/Decoracion/Decoracion/Shuriken.obj");
+	Bamboo = Model();
+	Bamboo.LoadModel("Models/Decoracion/Vegetacion/Bamboo.obj");
+
+
 
 	// Puertas
 	LionGate = Model();
@@ -372,7 +404,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
-	
+
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(40.0f, 0.0f, 230.0f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -433,8 +465,8 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Karin.RenderModel();
 
@@ -445,7 +477,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Overgrown.RenderModel();
 }
@@ -485,6 +517,138 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Nube.RenderModel();
 }
+
+void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
+
+	// *********************************************************************
+		// Roca 1
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Piedra1.RenderModel();
+
+	// *********************************************************************
+		// Roca 2
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Piedra2.RenderModel();
+
+	// *********************************************************************
+		// Roca 3
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(2.0f, 0.0f, -0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Piedra3.RenderModel();
+
+	// *********************************************************************
+		// Roca 4
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 4.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Piedra4.RenderModel();
+
+	// *********************************************************************
+		// Roca 5
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(4.0f, 0.0f, -0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Piedra5.RenderModel();
+
+	// *********************************************************************
+		// Patito
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Patito.RenderModel();
+
+	// *********************************************************************
+		// Lámpara Zoológico
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LamparaZoo.RenderModel();
+
+	// *********************************************************************
+		// Kunai
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 5.0f, 10.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Kunai.RenderModel();
+
+	// *********************************************************************
+		// León
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Leon.RenderModel();
+
+	// *********************************************************************
+		// Pato
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(40.0f, 0.0f, 10.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Pato.RenderModel();
+
+	// *********************************************************************
+		// Shuriken
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(20.0f, 0.0f, 20.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Shuriken.RenderModel();
+
+	// *********************************************************************
+		// Bamboo
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, 50.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Bamboo.RenderModel();
+}
+
+
 /*
 	Este metodo va a crear varias instancias del cubo para formar las paredes. Esto
 	evitara tener que mover la textura si queremos hacer paredes de diferentes tamanos
@@ -512,7 +676,7 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
 	model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));
 	buildWall(13, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
-	
+
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
 	model = glm::translate(model, glm::vec3(-0.5f, 0.0f, 0.0f));
@@ -551,7 +715,7 @@ int main()
 	CreateCubeMesh();
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
-	
+
 	pisoTexture = Texture("Textures/Skybox/sqpantsdn.tga");
 	pisoTexture.LoadTextureA();
 
@@ -624,7 +788,7 @@ int main()
 		1.0f, 0.0f, 0.0f,
 		15.0f);
 	spotLightCount++;
-	
+
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
@@ -634,6 +798,7 @@ int main()
 	////Loop mientras no se cierra la ventana
 
 	int n = 1; // Para controlar el tiempo de día y noche
+	int day = 50;
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -651,10 +816,10 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if(now >= 24 * n && now < 24 * (n + 1)) { // DIA
+		if (now >= day * n && now < day * (n + 1)) { // DIA
 			skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
-		else if (now >= 24 * (n + 1) && now < 24 * (n + 2)) { // NOCHE
+		else if (now >= day * (n + 1) && now < day * (n + 2)) { // NOCHE
 			skyboxNigth.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else {
@@ -667,7 +832,7 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
-		
+
 		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
@@ -678,21 +843,21 @@ int main()
 
 		// luz ligada a la cámara de tipo flash
 		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
-			glm::vec3 lowerLight = camera.getCameraPosition();
+		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
-		if (now >= 24 * n && now < 24 * (n + 1)) {
+		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
 		}
-		else if (now >= 24 * (n + 1) && now < 24 * (n + 2)) {
+		else if (now >= day * (n + 1) && now < day * (n + 2)) {
 			shaderList[0].SetDirectionalLight(&mainLightNigth);
 		}
 		else {
 			n = n + 2;
 		}
-		
+
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
@@ -731,13 +896,18 @@ int main()
 		//*****************************************************************
 
 		RenderVehiculos(model, modelaux, uniformModel);
+		//*****************************************************************
+				// CARGA LA DECORACIÓN
+		//*****************************************************************
+
+		RenderDecoracion(model, modelaux, uniformModel);
 
 		//*****************************************************************
 				// CARGA PAREDES EXTERNAS DE ESCENA
 		//*****************************************************************
 
 		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
-		
+
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
@@ -752,4 +922,3 @@ int main()
 		//AgaveTexture.UseTexture();
 		//Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
 		//meshList[3]->RenderMesh();
-		//glDisable(GL_BLEND);
