@@ -1,6 +1,3 @@
-/*
-Práctica 7: Iluminación 1
-*/
 //para cargar imagen
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -28,7 +25,7 @@ Práctica 7: Iluminación 1
 #include"Model.h"
 #include "Skybox.h"
 
-//para iluminación
+//para iluminaciÃ³n
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
@@ -50,10 +47,10 @@ Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
 
-// Vehículos
+// VehÃ­culos
 Model Cangremovil, Bicicleta, Nube;
 
-// Decoración 
+// DecoraciÃ³n 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
 Model Pato, Shuriken, Bamboo;
 
@@ -85,7 +82,7 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 
 
-//función de calculo de normales por promedio de vértices 
+//funciÃ³n de calculo de normales por promedio de vÃ©rtices 
 void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
 	unsigned int vLength, unsigned int normalOffset)
 {
@@ -304,7 +301,7 @@ void LoadModels() {
 	Overgrown = Model();
 	Overgrown.LoadModel("Models/OnePunchMan/Overgrown/Overgrown.obj");
 
-	// Vehículos
+	// VehÃ­culos
 	Cangremovil = Model();
 	Cangremovil.LoadModel("Models/BobEsponja/Cangremovil/Cangremovil.obj");
 	Bicicleta = Model();
@@ -312,7 +309,7 @@ void LoadModels() {
 	Nube = Model();
 	Nube.LoadModel("Models/DragonBall/Nube/Nube.obj");
 
-	// Decoración
+	// DecoraciÃ³n
 	Piedra1 = Model();
 	Piedra1.LoadModel("Models/Decoracion/Rocas/Roquita1.obj");
 	Piedra2 = Model();
@@ -351,22 +348,23 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Capsule Corp
 	// *********************************************************************
-	/*
-	model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -150.0f));
-	// Por ahora se usa esto, lo mejor seria escalar el modelo directo en 3DSMax
-	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+
+	model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 190.0f));
+	// TODO: escalar el modelo directo en 3DSMax
+	model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Capsule.RenderModel();
 	*/
 	// *********************************************************************
-			// Capsule Bob Esponja
+			// Casa Bob Esponja
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//casa = model; no sé que es esta linea
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 50.0f));
+	casa = model;
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaBob.RenderModel();
 	/*
@@ -385,9 +383,9 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -100.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.7f, 1.7f, 1.7f));
+	model = glm::translate(model, glm::vec3(-230.0f, 0.0f, 0.0f));
+  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaCalamardo.RenderModel();
 
@@ -396,8 +394,10 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 	/*
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
-	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
+	// TODO: Subir modelo creado por Manuel
+	model = glm::scale(model, glm::vec3(0.10f, 0.10f, 0.10f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
 	*/
@@ -406,9 +406,8 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(40.0f, 0.0f, 230.0f));
+	model = glm::translate(model, glm::vec3(20.0f, 0.0f, 260.0f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaSaitama.RenderModel();
 }
@@ -467,6 +466,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
 	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));
+>>>>>>> main
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Karin.RenderModel();
 
@@ -582,7 +582,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	//Patito.RenderModel();
 
 	// *********************************************************************
-		// Lámpara Zoológico
+		// LÃ¡mpara ZoolÃ³gico
 	// *********************************************************************
 
 	model = modelaux;
@@ -604,7 +604,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	//Kunai.RenderModel();
 
 	// *********************************************************************
-		// León
+		// LeÃ³n
 	// *********************************************************************
 
 	model = modelaux;
@@ -673,37 +673,98 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::translate(model, glm::vec3(-10.0f, 3.5f, 275.0f));
 	wallModelAux = model;
 
-	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
-	model = glm::translate(model, glm::vec3(1.5f, 0.0f, 0.0f));
-	buildWall(13, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::scale(model, glm::vec3(20.0f, 10.0f, 2.0f));
+	model = glm::translate(model, glm::vec3(-4.5f, 0.0f, 0.0f));
+	buildWall(19, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
 	model = wallModelAux;
-	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
-	model = glm::translate(model, glm::vec3(-0.5f, 0.0f, 0.0f));
-	buildWall(14, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::scale(model, glm::vec3(20.0f, 10.0f, 2.0f));
+	model = glm::translate(model, glm::vec3(-6.5f, 0.0f, 0.0f));
+	buildWall(8, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
 	model = wallModelAux;
-	model = glm::scale(model, glm::vec3(2.0f, 7.0f, 20.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 10.0f, 20.0f));
 	model = glm::translate(model, glm::vec3(140.0f, 0.0f, -0.5f));
 	buildWall(28, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
 	model = wallModelAux;
-	model = glm::scale(model, glm::vec3(2.0f, 7.0f, 20.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 10.0f, 20.0f));
 	model = glm::translate(model, glm::vec3(-140.0f, 0.0f, -0.5f));
 	buildWall(28, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
 	model = wallModelAux;
-	model = glm::scale(model, glm::vec3(20.0f, 7.0f, 2.0f));
+	model = glm::scale(model, glm::vec3(20.0f, 10.0f, 2.0f));
 	model = glm::translate(model, glm::vec3(-13.5f, 0.0f, -280.0f));
 	buildWall(28, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
 	// Puerta Principal
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(0.35f, 0.4f, 0.5f));
-	model = glm::translate(model, glm::vec3(30.0f, -9.0f, 2.5f));
+	model = glm::translate(model, glm::vec3(-314.0f, -9.0f, 2.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LionGate.RenderModel();
 }
+
+void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* texture,
+	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
+	
+	float WALL_HEIGHT = 5.0f;
+	float WALL_LENGTH = 17.0f;
+	float WALL_WIDTH = 2.0f;
+
+	float WALL_YPOS = -0.2f;
+
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::mat4 wallModelAux(1.0);
+	model = glm::translate(model, glm::vec3(-10.0f, 3.5f, 275.0f));
+	wallModelAux = model;
+
+	//Paredes eje X
+	model = glm::scale(model, glm::vec3(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH));
+	model = glm::translate(model, glm::vec3(-16.0f, WALL_YPOS, -90.0f));
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -58.7f));
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -59.3f));
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(5.3f, 0.0f, 35.0f));
+	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 88.0f));
+	buildWall(6, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));
+	buildWall(15, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	//Paredes eje Z
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(WALL_WIDTH, WALL_HEIGHT, WALL_LENGTH));
+	model = glm::translate(model, glm::vec3(-81.29f, WALL_YPOS, -11.05f));
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(1, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.4f));
+	buildWall(6, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(45.0f, 0.0f, 1.0f));
+	buildWall(8, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+	buildWall(6, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+	buildWall(7, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -1.0f));
+	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+}
+
+
 
 int main()
 {
@@ -753,7 +814,7 @@ int main()
 	Material_opaco = Material(0.3f, 4);
 
 
-	//luz direccional, sólo 1 y siempre debe de existir
+	//luz direccional, sÃ³lo 1 y siempre debe de existir
 	mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 		0.6f, 0.6f,
 		0.0f, 0.0f, -1.0f);
@@ -763,7 +824,7 @@ int main()
 		0.0f, 0.0f, -1.0f);
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
-	//Declaración de primer luz puntual
+	//DeclaraciÃ³n de primer luz puntual
 	pointLights[0] = PointLight(0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f,
 		-6.0f, 1.5f, 1.5f,
@@ -797,7 +858,7 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 
-	int n = 1; // Para controlar el tiempo de día y noche
+	int n = 1; // Para controlar el tiempo de dÃ­a y noche
 	int day = 50;
 
 	while (!mainWindow.getShouldClose())
@@ -833,7 +894,7 @@ int main()
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
 
-		//información en el shader de intensidad especular y brillo
+		//informaciÃ³n en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
 		uniformShininess = shaderList[0].GetShininessLocation();
 
@@ -841,13 +902,13 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la cámara de tipo flash
-		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
+		// luz ligada a la cÃ¡mara de tipo flash
+		//sirve para que en tiempo de ejecuciÃ³n (dentro del while) se cambien propiedades de la luz
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
-		//información al shader de fuentes de iluminación
+		//informaciÃ³n al shader de fuentes de iluminaciÃ³n
 		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
 		}
@@ -892,12 +953,12 @@ int main()
 		RenderPersonajes(model, modelaux, uniformModel);
 
 		//*****************************************************************
-				// CARGA LOS VEHÍCULOS
+				// CARGA LOS VEHÃCULOS
 		//*****************************************************************
 
 		RenderVehiculos(model, modelaux, uniformModel);
 		//*****************************************************************
-				// CARGA LA DECORACIÓN
+				// CARGA LA DECORACIÃ“N
 		//*****************************************************************
 
 		RenderDecoracion(model, modelaux, uniformModel);
@@ -908,6 +969,12 @@ int main()
 
 		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
 
+		//*****************************************************************
+				// CARGA MUROS INTERNOS
+		//*****************************************************************
+
+		RenderInnerWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+		
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
