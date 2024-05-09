@@ -271,7 +271,7 @@ void CreateShaders()
 void LoadModels() {
 
 	// Edificios
-	/*
+	/* 
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
 	Capsule = Model();
@@ -355,7 +355,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Capsule.RenderModel();
-	*/
+	
 	// *********************************************************************
 			// Casa Bob Esponja
 	// *********************************************************************
@@ -392,7 +392,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Kame House
 	// *********************************************************************
-	/*
+	
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
 	// TODO: Subir modelo creado por Manuel
@@ -400,7 +400,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
-	*/
+	
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
@@ -466,7 +466,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
 	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));
->>>>>>> main
+
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Karin.RenderModel();
 
