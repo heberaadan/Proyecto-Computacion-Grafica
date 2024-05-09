@@ -39,7 +39,7 @@ std::vector<Shader> shaderList;
 
 Camera camera;
 
-Texture pisoTexture, brickTexture;
+Texture pisoTexture, brickTexture, pisoNigth;
 
 // Edificios
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
@@ -52,7 +52,7 @@ Model Cangremovil, Bicicleta, Nube;
 
 // Decoración 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
-Model Pato, Shuriken, Bamboo;
+Model Pato, Shuriken, Bamboo, LamparaZoo_On;
 
 // Puertas
 Model LionGate;
@@ -135,9 +135,9 @@ void CreateObjects()
 
 	GLfloat floorVertices[] = {
 		-10.0f, 0.0f, -10.0f,	0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, -10.0f,	10.0f, 0.0f,	0.0f, -1.0f, 0.0f,
-		-10.0f, 0.0f, 10.0f,	0.0f, 10.0f,	0.0f, -1.0f, 0.0f,
-		10.0f, 0.0f, 10.0f,		10.0f, 10.0f,	0.0f, -1.0f, 0.0f
+		10.0f, 0.0f, -10.0f,	1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		-10.0f, 0.0f, 10.0f,	0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		10.0f, 0.0f, 10.0f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f
 	};
 
 	unsigned int vegetacionIndices[] = {
@@ -324,6 +324,8 @@ void LoadModels() {
 	Patito.LoadModel("Models/Decoracion/Decoracion/Patito.obj");
 	LamparaZoo = Model();
 	LamparaZoo.LoadModel("Models/Decoracion/Decoracion/LamparaZoo.obj");
+	LamparaZoo_On = Model();
+	LamparaZoo_On.LoadModel("Models/Decoracion/lamp_on.obj");
 	Kunai = Model();
 	Kunai.LoadModel("Models/Decoracion/Decoracion/Kunai.obj");
 	Leon = Model();
@@ -748,32 +750,56 @@ void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor,
 
 }
 
-void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
+void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now, int n, int day) {
 
 	// *********************************************************************
 		// Lámpara Zoológico
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-93.0f, 0.0f, -80.0f));
+	model = glm::translate(model, glm::vec3(-90.0f, 0.0f, -70.0f));
 	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	LamparaZoo.RenderModel();
+	if (now >= day * n && now < day * (n + 1)) {
+		LamparaZoo.RenderModel();
+	}
+	else if (now >= day * (n + 1) && now <= day * (n + 2)) {
+		LamparaZoo_On.RenderModel();
+	}
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-120.0f, 0.0f, -100.0f));
-	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-167.0f, 0.0f, -140.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	LamparaZoo.RenderModel();
+
+	if (now >= day * n && now < day * (n + 1)) {
+		LamparaZoo.RenderModel();
+	}
+	else if (now >= day * (n + 1) && now <= day * (n + 2)) {
+		LamparaZoo_On.RenderModel();
+	}
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-120.0f, 0.0f, 70.0f));
-	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-167.0f, 0.0f, -25.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	LamparaZoo.RenderModel();
+
+	if (now >= day * n && now < day * (n + 1)) {
+		LamparaZoo.RenderModel();
+	}
+	else if (now >= day * (n + 1) && now <= day * (n + 2)) {
+		LamparaZoo_On.RenderModel();
+	}
+
+	/*model = modelaux;
+	model = glm::translate(model, glm::vec3(-120.0f, 0.0f, 200.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LamparaZoo.RenderModel();*/
 }
 
 
@@ -788,9 +814,10 @@ int main()
 
 	camera = Camera(glm::vec3(0.0f, 0.0f, 290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
 
-	pisoTexture = Texture("Textures/Skybox/sqpantsdn.tga");
+	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
-
+	pisoNigth = Texture("Textures/floor_N2.tga");
+	pisoNigth.LoadTextureA();
 
 	brickTexture = Texture("Textures/brick2.png");
 	brickTexture.LoadTextureA();
@@ -836,10 +863,10 @@ int main()
 	//contador de luces puntuales
 	unsigned int pointLightCount = 0;
 	//Declaración de primer luz puntual
-	pointLights[0] = PointLight(0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f,
-		-6.0f, 1.5f, 1.5f,
-		0.3f, 0.2f, 0.1f);
+	pointLights[0] = PointLight(1.0f, 1.0f, 0.0f,
+		2.0f, 1.0f,
+		-120.0f, 10.0f, 200.0f,
+		1.0f, 0.017f, 0.0014f);
 	pointLightCount++;
 
 	unsigned int spotLightCount = 0;
@@ -870,7 +897,7 @@ int main()
 	////Loop mientras no se cierra la ventana
 
 	int n = 1; // Para controlar el tiempo de día y noche
-	int day = 50;
+	int day = 20;
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -890,22 +917,16 @@ int main()
 
 		//skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
 
-		printf("now: %f day: %i ", now, day*n);
-
 		if (now >= day*(n + 2)) {
 			n = n + 2;
 		}
 
 		if (now >= day * n && now < day*(n + 1)) { // DIA
-			printf("Dia \n");
 			skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
 		else if (now >= day*(n+1) && now <= day * (n + 2)) { // NOCHE
-			printf("Noche \n");
 			skyboxNigth.DrawSkybox(camera.calculateViewMatrix(), projection);
 		}
-
-		
 
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
@@ -929,6 +950,7 @@ int main()
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
 
 		//información al shader de fuentes de iluminación
+
 		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
 		}
@@ -936,7 +958,7 @@ int main()
 			shaderList[0].SetDirectionalLight(&mainLightNigth);
 		}
 
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		//shaderList[0].SetPointLights(pointLights, pointLightCount);
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		glm::mat4 model(1.0);
@@ -949,8 +971,13 @@ int main()
 		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
-
-		pisoTexture.UseTexture();
+	
+		if (now >= day * n && now < day * (n + 1)) {
+			pisoTexture.UseTexture();
+		}
+		else if (now >= day * (n + 1) && now <= day * (n + 2)) {
+			pisoNigth.UseTexture();
+		}
 		Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
 
 		meshList[2]->RenderMesh();
@@ -996,7 +1023,7 @@ int main()
 				// CARGA LAMPARAS
 		//*****************************************************************
 
-		RenderLamps(model, modelaux, uniformModel);
+		RenderLamps(model, modelaux, uniformModel, now, n, day);
 
 		glUseProgram(0);
 
