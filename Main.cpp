@@ -755,7 +755,21 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-80.0f, 0.0f, 60.0f));
+	model = glm::translate(model, glm::vec3(-93.0f, 0.0f, -80.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LamparaZoo.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-120.0f, 0.0f, -100.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LamparaZoo.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-120.0f, 0.0f, 70.0f));
 	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -874,15 +888,24 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (now >= day * n && now < day * (n + 1)) { // DIA
-			skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
-		}
-		else if (now >= day * (n + 1) && now < day * (n + 2)) { // NOCHE
-			skyboxNigth.DrawSkybox(camera.calculateViewMatrix(), projection);
-		}
-		else {
+		//skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+
+		printf("now: %f day: %i ", now, day*n);
+
+		if (now >= day*(n + 2)) {
 			n = n + 2;
 		}
+
+		if (now >= day * n && now < day*(n + 1)) { // DIA
+			printf("Dia \n");
+			skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		}
+		else if (now >= day*(n+1) && now <= day * (n + 2)) { // NOCHE
+			printf("Noche \n");
+			skyboxNigth.DrawSkybox(camera.calculateViewMatrix(), projection);
+		}
+
+		
 
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
@@ -909,11 +932,8 @@ int main()
 		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
 		}
-		else if (now >= day * (n + 1) && now < day * (n + 2)) {
+		else if (now >= day * (n + 1) && now <= day * (n + 2)) {
 			shaderList[0].SetDirectionalLight(&mainLightNigth);
-		}
-		else {
-			n = n + 2;
 		}
 
 		shaderList[0].SetPointLights(pointLights, pointLightCount);
