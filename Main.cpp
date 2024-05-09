@@ -515,18 +515,20 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	Nube.RenderModel();
 }
 
-void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
-
+void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 		// Lámpara Zoológico
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-20.0f, 0.0f, 10.0f));
+	model = glm::translate(model, glm::vec3(-50.0f, 0.0f, 10.0f));
 	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LamparaZoo.RenderModel();
+}
+
+void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 
 	// *********************************************************************
 		// Roca 1
@@ -972,6 +974,12 @@ int main()
 
 		RenderInnerWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
 		
+		//*****************************************************************
+				// CARGA LAMPARAS
+		//*****************************************************************
+
+		RenderLamps(model, modelaux, uniformModel);
+
 		glUseProgram(0);
 
 		mainWindow.swapBuffers();
