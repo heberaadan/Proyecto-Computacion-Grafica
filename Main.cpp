@@ -277,10 +277,10 @@ void LoadModels() {
 	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
-	//Flores = Model();
-	//Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
-	//Piedra = Model();
-	//Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
+	Flores = Model();
+	Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
+	Piedra = Model();
+	Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
 	CasaCalamardo = Model();
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
@@ -327,17 +327,17 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	Capsule.RenderModel();
 	*/
 	// *********************************************************************
-			// Capsule Bob Esponja
+			// Casa Bob Esponja
 	// *********************************************************************
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//casa = model; no sé que es esta linea
+	casa = model;
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaBob.RenderModel();
-	/*
+	
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -346,7 +346,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Piedra.RenderModel();*/
+	Piedra.RenderModel();
 
 	// *********************************************************************
 			// Casa Calamardo
@@ -539,6 +539,65 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::translate(model, glm::vec3(30.0f, -9.0f, 2.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LionGate.RenderModel();
+}
+
+void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* texture,
+	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
+
+	float WALL_HEIGHT = 5.0f;
+	float WALL_LENGTH = 17.0f;
+	float WALL_WIDTH = 2.0f;
+
+	float WALL_YPOS = -0.2f;
+
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::mat4 wallModelAux(1.0);
+	model = glm::translate(model, glm::vec3(-10.0f, 3.5f, 275.0f));
+	wallModelAux = model;
+
+	//Paredes eje X
+	model = glm::scale(model, glm::vec3(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH));
+	model = glm::translate(model, glm::vec3(-16.0f, WALL_YPOS, -90.0f));
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -58.7f));
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -59.3f));
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(5.3f, 0.0f, 35.0f));
+	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 88.0f));
+	buildWall(6, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));
+	buildWall(15, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	//Paredes eje Z
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(WALL_WIDTH, WALL_HEIGHT, WALL_LENGTH));
+	model = glm::translate(model, glm::vec3(-81.29f, WALL_YPOS, -11.05f));
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(1, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.4f));
+	buildWall(6, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(45.0f, 0.0f, 1.0f));
+	buildWall(8, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+	buildWall(6, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+	buildWall(7, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -1.0f));
+	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+
 }
 
 int main()
@@ -737,6 +796,12 @@ int main()
 		//*****************************************************************
 
 		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+
+		//*****************************************************************
+		// CARGA MUROS INTERNOS
+//*****************************************************************
+
+		RenderInnerWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
 		
 		glUseProgram(0);
 
