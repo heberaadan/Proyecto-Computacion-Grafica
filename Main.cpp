@@ -271,17 +271,16 @@ void CreateShaders()
 void LoadModels() {
 
 	// Edificios
-	/* 
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
 	Capsule = Model();
-	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
+	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
-	//Flores = Model();
-	//Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
-	//Piedra = Model();
-	//Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
+	Flores = Model();
+	Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
+	Piedra = Model();
+	Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
 	CasaCalamardo = Model();
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
@@ -528,7 +527,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Piedra1.RenderModel();
+	Piedra1.RenderModel();
 
 	// *********************************************************************
 		// Roca 2
@@ -538,7 +537,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 2.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Piedra2.RenderModel();
+	Piedra2.RenderModel();
 
 	// *********************************************************************
 		// Roca 3
@@ -548,7 +547,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(2.0f, 0.0f, -0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Piedra3.RenderModel();
+	Piedra3.RenderModel();
 
 	// *********************************************************************
 		// Roca 4
@@ -558,7 +557,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 4.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Piedra4.RenderModel();
+	Piedra4.RenderModel();
 
 	// *********************************************************************
 		// Roca 5
@@ -568,7 +567,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(4.0f, 0.0f, -0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Piedra5.RenderModel();
+	Piedra5.RenderModel();
 
 	// *********************************************************************
 		// Patito
@@ -579,7 +578,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Patito.RenderModel();
+	Patito.RenderModel();
 
 	// *********************************************************************
 		// Lámpara Zoológico
