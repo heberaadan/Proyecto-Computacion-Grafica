@@ -271,17 +271,17 @@ void CreateShaders()
 void LoadModels() {
 
 	// Edificios
-	/* 
+	/*
 	KameHouse = Model();
-	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
-	Capsule = Model();
+	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");*/
+	/*Capsule = Model();
 	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
-	//Flores = Model();
-	//Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
-	//Piedra = Model();
-	//Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
+	Flores = Model();
+	Flores.LoadModel("Models/BobEsponja/CasaBob/flores.obj");
+	Piedra = Model();
+	Piedra.LoadModel("Models/BobEsponja/CasaBob/piedras.obj");
 	CasaCalamardo = Model();
 	CasaCalamardo.LoadModel("Models/BobEsponja/CasaCalamardo/CasaCalamardo.obj");
 	CasaSaitama = Model();
@@ -335,8 +335,6 @@ void LoadModels() {
 	Bamboo = Model();
 	Bamboo.LoadModel("Models/Decoracion/Vegetacion/Bamboo.obj");
 
-
-
 	// Puertas
 	LionGate = Model();
 	LionGate.LoadModel("Models/gate.obj");
@@ -349,25 +347,25 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 			// Capsule Corp
 	// *********************************************************************
 
-	model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 190.0f));
-	// TODO: escalar el modelo directo en 3DSMax
-	model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Capsule.RenderModel();
-	
+	//model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 190.0f));
+	//// TODO: escalar el modelo directo en 3DSMax
+	//model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
+	//model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Capsule.RenderModel();
+	//
 	// *********************************************************************
 			// Casa Bob Esponja
 	// *********************************************************************
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 50.0f));
-	casa = model;
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	casa = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaBob.RenderModel();
-	/*
+	
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -376,7 +374,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Piedra.RenderModel();*/
+	Piedra.RenderModel();
 
 	// *********************************************************************
 			// Casa Calamardo
@@ -384,7 +382,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-230.0f, 0.0f, 0.0f));
-  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaCalamardo.RenderModel();
@@ -392,7 +390,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Kame House
 	// *********************************************************************
-	
+	/*
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
 	// TODO: Subir modelo creado por Manuel
@@ -400,7 +398,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
-	
+	*/
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
@@ -466,7 +464,6 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
 	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));
-
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Karin.RenderModel();
 
@@ -519,6 +516,17 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 }
 
 void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
+
+	// *********************************************************************
+		// Lámpara Zoológico
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-20.0f, 0.0f, 10.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LamparaZoo.RenderModel();
 
 	// *********************************************************************
 		// Roca 1
@@ -580,17 +588,6 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//Patito.RenderModel();
-
-	// *********************************************************************
-		// Lámpara Zoológico
-	// *********************************************************************
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	LamparaZoo.RenderModel();
 
 	// *********************************************************************
 		// Kunai
