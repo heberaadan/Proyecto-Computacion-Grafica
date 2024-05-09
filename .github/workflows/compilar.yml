@@ -1,0 +1,24 @@
+name: Compile OpenGL C++ Project
+
+on:
+  push:
+    branches:
+      - main
+  pull_request: # This will trigger on every pull request to any branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y g++ libglew-dev libglfw3-dev libglm-dev
+
+    - name: Compile C++ code
+      run: |
+        g++ -o Zoo Main.cpp -lGL -lGLEW -lglfw -lm -std=c++11
