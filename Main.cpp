@@ -274,8 +274,8 @@ void LoadModels() {
 	/*
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");*/
-	Capsule = Model();
-	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
+	/*Capsule = Model();
+	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
 	Flores = Model();
@@ -518,6 +518,17 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 
 	// *********************************************************************
+		// Lámpara Zoológico
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-20.0f, 0.0f, 10.0f));
+	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	LamparaZoo.RenderModel();
+
+	// *********************************************************************
 		// Roca 1
 	// *********************************************************************
 
@@ -577,17 +588,6 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//Patito.RenderModel();
-
-	// *********************************************************************
-		// Lámpara Zoológico
-	// *********************************************************************
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(10.0f, 0.0f, 10.0f));
-	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	LamparaZoo.RenderModel();
 
 	// *********************************************************************
 		// Kunai
