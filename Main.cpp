@@ -346,26 +346,25 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Capsule Corp
 	// *********************************************************************
-
-	//model = glm::translate(model, glm::vec3(-220.0f, 0.0f, 190.0f));
-	//// TODO: escalar el modelo directo en 3DSMax
-	//model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
-	//model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Capsule.RenderModel();
-	//
+	/*
+	model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -150.0f));
+	// Por ahora se usa esto, lo mejor seria escalar el modelo directo en 3DSMax
+	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Capsule.RenderModel();
+	*/
 	// *********************************************************************
 			// Casa Bob Esponja
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 50.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	casa = model;
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaBob.RenderModel();
-	
+
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -381,9 +380,9 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-230.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -100.0f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.9f, 0.9f, 0.9f));
+	model = glm::scale(model, glm::vec3(1.7f, 1.7f, 1.7f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaCalamardo.RenderModel();
 
@@ -392,10 +391,8 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 	/*
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
-	// TODO: Subir modelo creado por Manuel
-	model = glm::scale(model, glm::vec3(0.10f, 0.10f, 0.10f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
+	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
 	*/
@@ -404,8 +401,9 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(20.0f, 0.0f, 260.0f));
+	model = glm::translate(model, glm::vec3(40.0f, 0.0f, 230.0f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	CasaSaitama.RenderModel();
 }
@@ -462,8 +460,8 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
-	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.65f, 0.65f, 0.65f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Karin.RenderModel();
 
@@ -474,7 +472,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Overgrown.RenderModel();
 }
