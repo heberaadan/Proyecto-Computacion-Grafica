@@ -312,6 +312,8 @@ void LoadModels() {
 	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/Bicicleta.obj");
 	Nube = Model();
 	Nube.LoadModel("Models/DragonBall/Nube/Nube.obj");
+	llantaC = Model();
+	llantaC.LoadModel("Models/BobEsponja/Cangremovil/llantaC.obj");
 
 	// Decoración
 	Piedra1 = Model();
@@ -481,7 +483,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	if (now >= day * n && now < day * (n + 1)) {
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-		if (now >= (day * (n + 1) - 5) && day < day * (n + 1)) {
+		if (now >= (day * (n + 1) - 5) && day < day * (n + 1)) { // Genera un glich 10 seg antes de que sea de noche 
 			x = rand() % 2;
 			y = rand() % 2;
 			z = rand() % 2;
@@ -490,7 +492,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Karin.RenderModel();
 	}
-	else if (now >= day * (n + 1) && now < day * (n + 2)) {
+	else if (now >= day * (n + 1) && now < day * (n + 2)) { // Genera un glich 10 seg antes de que sea de día
 		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		if (now >= (day * (n + 2) - 5) && day < day * (n + 2)) {
@@ -516,7 +518,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	Overgrown.RenderModel();
 }
 
-void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
+void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, float movcangre, float rotllantaC) {
 
 	// *********************************************************************
 		// Bicicleta 
@@ -529,20 +531,46 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Bicicleta.RenderModel();
 
+	glm::mat4 cangre(1.0);
+
 	// *********************************************************************
 		// Cangremovil
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(180.0f, 1.3f, -170.0f));
+	model = glm::translate(model, glm::vec3(180.0f, 1.3f, -170.0f + movcangre));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	cangre = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Cangremovil.RenderModel();
 
 	//:============ LLANTAS DELANTERAS :============
 	
+	model = cangre;
+	model = glm::translate(model, glm::vec3(10.0f, 0.0f, -8.0f)); // Derecha
+	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); 
+	llantaC.RenderModel();
 
+	model = cangre;
+	model = glm::translate(model, glm::vec3(-8.0f, 0.0f, -8.0f)); // Izquierda
+	model = glm::rotate(model, glm::radians(rotllantaC),glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaC.RenderModel();
+
+	//:============ LLANTAS TRASERAS :============
+
+	model = cangre;
+	model = glm::translate(model, glm::vec3(12.0f, 0.0f, 4.0f)); // Derecha
+	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaC.RenderModel();
+
+	model = cangre;
+	model = glm::translate(model, glm::vec3(-10.0f, 0.0f, 4.0f)); // Izquierda
+	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaC.RenderModel();
 
 	// *********************************************************************
 		// Nube
@@ -842,7 +870,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(0.0f, 0.0f, 290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -929,6 +957,10 @@ int main()
 	int n = 1; // Para controlar el tiempo de día y noche
 	int day = 20;
 	float angle = 0.0f; // Para generar el glich
+
+	float movcangre = 0.0f, rotllantaC = 0.0f; // Para mover al cangremovil
+	float movOffSetC = 0.06f, rotllantaOffSetC = 5.0f;;
+
 	while (!mainWindow.getShouldClose())
 	{
 		GLfloat now = glfwGetTime();
@@ -948,6 +980,11 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+
+		if (movcangre > -100) { // Para el movimiento del coche
+			movcangre += movOffSetC * deltaTime;
+			rotllantaC += rotllantaOffSetC * deltaTime;
+		}
 
 		if (now >= day*(n + 2)) {
 			n = n + 2;
@@ -1032,7 +1069,7 @@ int main()
 				// CARGA LOS VEHÍCULOS
 		//*****************************************************************
 
-		RenderVehiculos(model, modelaux, uniformModel);
+		RenderVehiculos(model, modelaux, uniformModel, movcangre, rotllantaC);
 		//*****************************************************************
 				// CARGA LA DECORACIÓN
 		//*****************************************************************
