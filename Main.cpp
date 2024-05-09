@@ -7,6 +7,9 @@
 #include <vector>
 #include <math.h>
 
+#include <iostream> // Para números aleatorios
+#include <cstdlib>
+
 #include <glew.h>
 #include <glfw3.h>
 
@@ -49,6 +52,7 @@ Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
 
 // Vehículos
 Model Cangremovil, Bicicleta, Nube;
+Model llantaC;
 
 // Decoración 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
@@ -410,8 +414,9 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	CasaSaitama.RenderModel();
 }
 
-void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
+void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now, int n, int day, float angle) {
 
+	float x, y, z;
 	// *********************************************************************
 			// Maestro Roshi 
 	// *********************************************************************
@@ -456,16 +461,48 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Gary.RenderModel();
 
+	//// *********************************************************************
+	//	// León
+	//// *********************************************************************
+
+	//model = modelaux;
+	//model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	//Leon.RenderModel();
+
 	// *********************************************************************
 			// Karin
 	// *********************************************************************
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Karin.RenderModel();
+	if (now >= day * n && now < day * (n + 1)) {
+		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+		if (now >= (day * (n + 1) - 5) && day < day * (n + 1)) {
+			x = rand() % 2;
+			y = rand() % 2;
+			z = rand() % 2;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(x, y, z));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Karin.RenderModel();
+	}
+	else if (now >= day * (n + 1) && now < day * (n + 2)) {
+		model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		if (now >= (day * (n + 2) - 5) && day < day * (n + 2)) {
+			x = rand() % 2;
+			y = rand() % 2;
+			z = rand() % 2;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(x, y, z));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Leon.RenderModel();
+	}
+	
 
 	// *********************************************************************
 			// Overgrown
@@ -502,6 +539,10 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Cangremovil.RenderModel();
+
+	//:============ LLANTAS DELANTERAS :============
+	
+
 
 	// *********************************************************************
 		// Nube
@@ -588,17 +629,6 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//Kunai.RenderModel();
-
-	// *********************************************************************
-		// León
-	// *********************************************************************
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Leon.RenderModel();
 
 	// *********************************************************************
 		// Pato
@@ -898,13 +928,15 @@ int main()
 
 	int n = 1; // Para controlar el tiempo de día y noche
 	int day = 20;
-
+	float angle = 0.0f; // Para generar el glich
 	while (!mainWindow.getShouldClose())
 	{
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+
+		angle += 0.1f;
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
@@ -994,7 +1026,7 @@ int main()
 				// CARGA LOS PERSONAJES
 		//*****************************************************************
 
-		RenderPersonajes(model, modelaux, uniformModel);
+		RenderPersonajes(model, modelaux, uniformModel, now, n, day, angle);
 
 		//*****************************************************************
 				// CARGA LOS VEHÍCULOS
