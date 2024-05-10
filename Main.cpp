@@ -40,13 +40,14 @@ int n = 1; // Para controlar el tiempo de día y noche
 int day = 30;
 float angle = 0.0f; // Para generar el glich
 float ang = 0.0f; // Para el cangremovil
+float angArm = 0.0f; // Para el saludo de Calamardo
 float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
 float movbiciOffset = 0.095f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
 float movOffSetC = 0.07f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
 float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
 float movnubeoffset, movnubeYoffset;
-bool avanza = true;
+bool avanza = true, saludo = true;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -61,6 +62,7 @@ Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
+Model BrazoCalamardo;
 
 // Vehículos
 Model Cangremovil, Bicicleta, Nube;
@@ -312,6 +314,8 @@ void LoadModels() {
 	Bob.LoadModel("Models/BobEsponja/Bob/BobEsponja.obj");
 	Calamardo = Model();
 	Calamardo.LoadModel("Models/BobEsponja/Calamardo/Calamardo.obj");
+	BrazoCalamardo = Model();
+	BrazoCalamardo.LoadModel("Models/BobEsponja/Calamardo/brazoCalamardo.obj");
 	Gary = Model();
 	Gary.LoadModel("Models/BobEsponja/Gary/Gary.obj");
 	Overgrown = Model();
@@ -459,12 +463,23 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 			// Calamardo
 	// *********************************************************************
 
+	glm::mat4 calamardo(1.0);
+
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-220.0f, 0.0f, -90.0f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	calamardo = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Calamardo.RenderModel();
+
+	//:=========== Brazo :===========
+
+	model = calamardo;
+	model = glm::translate(model, glm::vec3(0.0f, 8.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(angArm), glm::vec3(0.0f, 0.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	BrazoCalamardo.RenderModel();
 
 	// *********************************************************************
 			// Gary
@@ -1002,7 +1017,22 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		
+		if (saludo) { // Para el saludo de Calamardo
+			if (angArm < 45) {
+				angArm += 1.0f;
+			}
+			else {
+				saludo = !saludo;
+			}
+		}
+		else {
+			if (angArm > -45) {
+				angArm -= 1.0f;
+			}
+			else {
+				saludo = !saludo;
+			}
+		}
 
 		if (avanza) {
 			if (movbiciz < 94) { // Para mover a la bici
