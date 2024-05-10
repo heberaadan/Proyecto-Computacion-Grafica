@@ -37,13 +37,16 @@
 const float toRadians = 3.14159265f / 180.0f;
 
 int n = 1; // Para controlar el tiempo de día y noche
-int day = 20;
+int day = 30;
 float angle = 0.0f; // Para generar el glich
 float ang = 0.0f; // Para el cangremovil
-float movcangre = -200.0f, rotllantaC = 0.0f; // Para mover al cangremovil
-float movOffSetC = 0.05f, rotllantaOffSetC = 8.0f;
+float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
+float movbiciOffset = 0.095f, rotllantaB = 0.0f; 
+float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
+float movOffSetC = 0.07f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
 float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
 float movnubeoffset, movnubeYoffset;
+bool avanza = true;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -63,7 +66,7 @@ Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
 
 // Vehículos
 Model Cangremovil, Bicicleta, Nube;
-Model llantaC;
+Model llantaC, llantaB;
 
 // Decoración 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
@@ -320,11 +323,13 @@ void LoadModels() {
 	Cangremovil = Model();
 	Cangremovil.LoadModel("Models/BobEsponja/Cangremovil/Cangremovil.obj");
 	Bicicleta = Model();
-	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/Bicicleta.obj");
+	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/bici.obj");
 	Nube = Model();
 	Nube.LoadModel("Models/DragonBall/Nube/Nube.obj");
 	llantaC = Model();
 	llantaC.LoadModel("Models/BobEsponja/Cangremovil/llantaC.obj");
+	llantaB = Model();
+	llantaB.LoadModel("Models/OnePunchMan/Bicicleta/llantaB.obj");
 
 	// Decoración
 	Piedra1 = Model();
@@ -534,24 +539,40 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	Overgrown.RenderModel();
 }
 
-void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, float movcangre, float rotllantaC, float angle) {
+void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 
 	// *********************************************************************
 		// Bicicleta 
 	// *********************************************************************
+	glm::mat4 bici(1.0);
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(170.0f, 0.3f, -200.0f));
-	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(260, 0.0f, movbiciz));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	bici = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Bicicleta.RenderModel();
 
-	glm::mat4 cangre(1.0);
-	//double x_2 = pow(movcangre, 2);
+	//:============ LLANTA TRASERA :============
+
+	model = bici;
+	model = glm::translate(model, glm::vec3(0.5f, 3.6f, 5.6f));
+	model = glm::rotate(model, glm::radians(rotllantaB), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaB.RenderModel();
+
+	//:============ LLANTA DELANTERA :============
+
+	model = bici;
+	model = glm::translate(model, glm::vec3(0.5f, 3.3f, -5.7f));
+	model = glm::rotate(model, glm::radians(rotllantaB), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaB.RenderModel();
+
 	// *********************************************************************
 		// Cangremovil
 	// *********************************************************************
+	glm::mat4 cangre(1.0);
 
 	model = modelaux;
 	if (movcangre < 94) { // EL COCHE AVANZA
@@ -562,7 +583,7 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, f
 	else { // EL COCHE SE VOLCA
 		
 		model = glm::translate(model, glm::vec3(180.0f, -0.031*pow(movcangre,2) + 7.78 * movcangre - 449.617, movcangre));
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 1.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(ang), glm::vec3(1.0f, 1.0f, 1.0f));
 		cangre = model;
 	}
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -601,7 +622,7 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, f
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(170.0f-movnubeX, 5.0*sin(glm::radians(movnubeY)*0.1f) + 70, -140.0f));
+	model = glm::translate(model, glm::vec3(170.0f-movnubeX, 10.0*sin(glm::radians(movnubeY)*0.1f) + 70, -140.0f));
 	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -843,7 +864,7 @@ void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor,
 
 }
 
-void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now, int n, int day) {
+void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
 
 	// *********************************************************************
 		// Lámpara Zoológico
@@ -1059,13 +1080,33 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		printf("movcangre: %f \n", movcangre);
-		if (movcangre >= -200 && movcangre < 94) { // Para el movimiento del coche
+		
+
+		if (avanza) {
+			if (movbiciz < 94) { // Para mover a la bici
+				movbiciz += movbiciOffset * deltaTime;
+				rotllantaB += 6.0f;
+			}
+			else {
+				avanza = !avanza;
+			}
+		}
+		else {
+			if (movbiciz > -260) {
+				movbiciz -= movbiciOffset * deltaTime;
+				rotllantaB -= 6.0f;
+			}
+			else {
+				avanza = !avanza;
+			}
+		}
+
+		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
 			movcangre += movOffSetC * deltaTime;
 			rotllantaC += rotllantaOffSetC * deltaTime;
 		}
-		else if (movcangre >= 94 && movcangre < 160){
-			movcangre += movOffSetC * deltaTime;
+		else if (movcangre >= 94 && movcangre < 155){
+			movcangre += movOffsetC2 * deltaTime;
 			ang += 5.0f;
 		}
 
@@ -1158,7 +1199,7 @@ int main()
 				// CARGA LOS VEHÍCULOS
 		//*****************************************************************
 
-		RenderVehiculos(model, modelaux, uniformModel, movcangre, rotllantaC, ang);
+		RenderVehiculos(model, modelaux, uniformModel);
 		//*****************************************************************
 				// CARGA LA DECORACIÓN
 		//*****************************************************************
@@ -1181,7 +1222,7 @@ int main()
 				// CARGA LAMPARAS
 		//*****************************************************************
 
-		RenderLamps(model, modelaux, uniformModel, now, n, day);
+		RenderLamps(model, modelaux, uniformModel, now);
 
 		glUseProgram(0);
 
