@@ -430,7 +430,7 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	CasaSaitama.RenderModel();
 }
 
-void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now, int n, int day, float angle) {
+void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
 
 	float x, y, z;
 	// *********************************************************************
@@ -477,19 +477,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Gary.RenderModel();
 
-	//// *********************************************************************
-	//	// León
-	//// *********************************************************************
-
-	//model = modelaux;
-	//model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
-	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-	//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Leon.RenderModel();
 
 	// *********************************************************************
-			// Karin
+			// Karin y León 
 	// *********************************************************************
 
 	model = modelaux;
@@ -519,7 +509,6 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 		Leon.RenderModel();
 	}
 	
-
 	// *********************************************************************
 			// Overgrown
 	// *********************************************************************
@@ -1127,7 +1116,7 @@ int main()
 				// CARGA LOS PERSONAJES
 		//*****************************************************************
 
-		RenderPersonajes(model, modelaux, uniformModel, now, n, day, angle);
+		RenderPersonajes(model, modelaux, uniformModel, now);
 
 		//*****************************************************************
 				// CARGA LOS VEHÍCULOS
