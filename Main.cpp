@@ -279,7 +279,7 @@ void LoadModels() {
 
 	// Edificios
 	KameHouse = Model();
-	//KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
+	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
 	Capsule = Model();
 	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
 	CasaBob = Model();
@@ -403,13 +403,14 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Kame House
 	// *********************************************************************
-	/*
+	
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
-	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
-	*/
+
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
@@ -698,7 +699,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	//Bamboo.RenderModel();
 
 	// *********************************************************************
-		// Spotlight a Leon
+		// Stage de Leon
 	// *********************************************************************
 	
 	model = modelaux;
@@ -707,22 +708,6 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	PlankStage.RenderModel();
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 50.0f));
-	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	SpotlightModel.RenderModel();
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, -10.0f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	SpotlightModel.RenderModel();
-
-
 }
 
 
@@ -891,6 +876,29 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LamparaZoo.RenderModel();*/
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 50.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, -10.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-120.0f, 21.0f, 273.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+
 }
 
 
@@ -979,13 +987,12 @@ int main()
 		5.0f);
 	spotLightCount++;
 
-	//luz fija
-	spotLights[1] = SpotLight(0.0f, 1.0f, 0.0f,
+	spotLights[1] = SpotLight(1.0f, 1.0f, 0.8f,
 		1.0f, 2.0f,
-		5.0f, 10.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		15.0f);
+		-120.0f, 21.0f, 285.0f,
+		0.0f, -10.0f, -35.0f,
+		5.0f, 0.0f, 0.0f,
+		20.0f);
 	spotLightCount++;
 
 	//Spotlight leon
