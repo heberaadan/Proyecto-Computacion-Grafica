@@ -36,6 +36,15 @@
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+int n = 1; // Para controlar el tiempo de día y noche
+int day = 20;
+float angle = 0.0f; // Para generar el glich
+float ang = 0.0f; // Para el cangremovil
+float movcangre = -200.0f, rotllantaC = 0.0f; // Para mover al cangremovil
+float movOffSetC = 0.05f, rotllantaOffSetC = 8.0f;
+float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
+float movnubeoffset, movnubeYoffset;
+
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
@@ -518,7 +527,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	Overgrown.RenderModel();
 }
 
-void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, float movcangre, float rotllantaC) {
+void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, float movcangre, float rotllantaC, float angle) {
 
 	// *********************************************************************
 		// Bicicleta 
@@ -532,43 +541,51 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, f
 	Bicicleta.RenderModel();
 
 	glm::mat4 cangre(1.0);
-
+	//double x_2 = pow(movcangre, 2);
 	// *********************************************************************
 		// Cangremovil
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(180.0f, 1.3f, -170.0f + movcangre));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	cangre = model;
+	if (movcangre < 94) { // EL COCHE AVANZA
+		model = glm::translate(model, glm::vec3(180.0f, 1.3f, movcangre));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		cangre = model;
+	}
+	else { // EL COCHE SE VOLCA
+		
+		model = glm::translate(model, glm::vec3(180.0f, -0.031*pow(movcangre,2) + 7.78 * movcangre - 449.617, movcangre));
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 1.0f, 1.0f));
+		cangre = model;
+	}
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Cangremovil.RenderModel();
 
 	//:============ LLANTAS DELANTERAS :============
 	
 	model = cangre;
-	model = glm::translate(model, glm::vec3(10.0f, 0.0f, -8.0f)); // Derecha
-	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(10.0f, 1.0f, -8.0f)); // Derecha
+	model = glm::rotate(model, glm::radians(-rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); 
 	llantaC.RenderModel();
 
 	model = cangre;
-	model = glm::translate(model, glm::vec3(-8.0f, 0.0f, -8.0f)); // Izquierda
-	model = glm::rotate(model, glm::radians(rotllantaC),glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-8.0f, 1.0f, -8.0f)); // Izquierda
+	model = glm::rotate(model, glm::radians(-rotllantaC),glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	llantaC.RenderModel();
 
 	//:============ LLANTAS TRASERAS :============
 
 	model = cangre;
-	model = glm::translate(model, glm::vec3(12.0f, 0.0f, 4.0f)); // Derecha
-	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(12.0f, 1.0f, 4.0f)); // Derecha
+	model = glm::rotate(model, glm::radians(-rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	llantaC.RenderModel();
 
 	model = cangre;
-	model = glm::translate(model, glm::vec3(-10.0f, 0.0f, 4.0f)); // Izquierda
-	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-10.0f, 1.0f, 4.0f)); // Izquierda
+	model = glm::rotate(model, glm::radians(-rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	llantaC.RenderModel();
 
@@ -577,7 +594,7 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, f
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(170.0f, 20.0f, -140.0f));
+	model = glm::translate(model, glm::vec3(170.0f-movnubeX, 5.0*sin(glm::radians(movnubeY)*0.1f) + 70, -140.0f));
 	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -870,7 +887,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 2.0f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -954,12 +971,8 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 
-	int n = 1; // Para controlar el tiempo de día y noche
-	int day = 20;
-	float angle = 0.0f; // Para generar el glich
-
-	float movcangre = 0.0f, rotllantaC = 0.0f; // Para mover al cangremovil
-	float movOffSetC = 0.06f, rotllantaOffSetC = 5.0f;;
+	movnubeoffset = 0.05f;
+	movnubeYoffset = 12.0f;
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -979,12 +992,22 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
-
-		if (movcangre > -100) { // Para el movimiento del coche
+		printf("movcangre: %f \n", movcangre);
+		if (movcangre >= -200 && movcangre < 94) { // Para el movimiento del coche
 			movcangre += movOffSetC * deltaTime;
 			rotllantaC += rotllantaOffSetC * deltaTime;
 		}
+		else if (movcangre >= 94 && movcangre < 160){
+			movcangre += movOffSetC * deltaTime;
+			ang += 5.0f;
+		}
+
+		if (movnubeYoffset > 360.0f) {
+			movnubeYoffset = 0.0f;
+		}
+
+		movnubeY += movnubeYoffset;
+		movnubeX += movnubeoffset * deltaTime;
 
 		if (now >= day*(n + 2)) {
 			n = n + 2;
@@ -1069,7 +1092,7 @@ int main()
 				// CARGA LOS VEHÍCULOS
 		//*****************************************************************
 
-		RenderVehiculos(model, modelaux, uniformModel, movcangre, rotllantaC);
+		RenderVehiculos(model, modelaux, uniformModel, movcangre, rotllantaC, ang);
 		//*****************************************************************
 				// CARGA LA DECORACIÓN
 		//*****************************************************************
