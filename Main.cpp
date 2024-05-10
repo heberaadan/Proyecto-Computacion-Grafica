@@ -49,9 +49,11 @@ Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
+std::vector<Texture*> wallTextures;
+
 Camera camera;
 
-Texture pisoTexture, brickTexture, pisoNigth;
+Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
 
 // Edificios
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
@@ -66,6 +68,7 @@ Model llantaC;
 // Decoración 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
 Model Pato, Shuriken, Bamboo, LamparaZoo_On;
+Model SpotlightModel, PlankStage;
 
 // Puertas
 Model LionGate;
@@ -231,40 +234,40 @@ void CreateCubeMesh()
 		//x		y		z		S		T			NX		NY		NZ
 		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//0
 		0.5f, -0.5f,  0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//1
-		0.5f,  0.5f,  0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//2
-		-0.5f,  0.5f,  0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//3
+		0.5f,  0.5f,  0.5f,		3.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//2
+		-0.5f,  0.5f,  0.5f,	0.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//3
 		// right
 		//x		y		z		S		T
 		0.5f, -0.5f,  0.5f,	    0.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
 		0.5f, -0.5f,  -0.5f,	3.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
-		0.5f,  0.5f,  -0.5f,	0.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
-		0.5f,  0.5f,  0.5f,	    3.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  -0.5f,	3.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  0.5f,	    0.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
 		// back
 		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	1.0f,
 		0.5f, -0.5f, -0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	1.0f,
-		0.5f,  0.5f, -0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	1.0f,
-		-0.5f,  0.5f, -0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+		0.5f,  0.5f, -0.5f,		3.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+		-0.5f,  0.5f, -0.5f,	0.0f, 2.0f,			0.0f,	0.0f,	1.0f,
 
 		// left
 		//x		y		z		S		T
 		-0.5f, -0.5f,  -0.5f,	0.0f, 0.0f,			1.0f,	0.0f,	0.0f,
 		-0.5f, -0.5f,  0.5f,	3.0f, 0.0f,			1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  0.5f,	0.0f, 2.0f,			1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  -0.5f,	3.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  0.5f,	3.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  -0.5f,	0.0f, 2.0f,			1.0f,	0.0f,	0.0f,
 
 		// bottom
 		//x		y		z		S		T
 		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	1.0f,	0.0f,
 		0.5f,  -0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	1.0f,	0.0f,
-		 0.5f,  -0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	1.0f,	0.0f,
-		-0.5f, -0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+		 0.5f,  -0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+		-0.5f, -0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	1.0f,	0.0f,
 
 		//UP
 		 //x		y		z		S		T
 		 -0.5f, 0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	-1.0f,	0.0f,
 		 0.5f,  0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	-1.0f,	0.0f,
-		  0.5f, 0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
-		 -0.5f, 0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+		  0.5f, 0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+		 -0.5f, 0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
 
 	};
 
@@ -284,11 +287,10 @@ void CreateShaders()
 void LoadModels() {
 
 	// Edificios
-	/*
 	KameHouse = Model();
-	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");*/
-	/*Capsule = Model();
-	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
+	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
+	Capsule = Model();
+	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
 	Flores = Model();
@@ -351,6 +353,10 @@ void LoadModels() {
 	Shuriken.LoadModel("Models/Decoracion/Decoracion/Shuriken.obj");
 	Bamboo = Model();
 	Bamboo.LoadModel("Models/Decoracion/Vegetacion/Bamboo.obj");
+	SpotlightModel = Model();
+	SpotlightModel.LoadModel("Models/Decoracion/Decoracion/Spotlight.obj");
+	PlankStage = Model();
+	PlankStage.LoadModel("Models/Decoracion/Decoracion/PlankStage.obj");
 
 	// Puertas
 	LionGate = Model();
@@ -406,13 +412,14 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Kame House
 	// *********************************************************************
-	/*
+	
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
-	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
-	*/
+
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
@@ -488,7 +495,7 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 20.0f));
 	if (now >= day * n && now < day * (n + 1)) {
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
@@ -707,6 +714,17 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	//Bamboo.RenderModel();
+
+	// *********************************************************************
+		// Stage de Leon
+	// *********************************************************************
+	
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 0.0f, 20.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	PlankStage.RenderModel();
 }
 
 
@@ -766,7 +784,7 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	LionGate.RenderModel();
 }
 
-void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* texture,
+void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, std::vector<Texture*> wallTextures,
 	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
 	
 	float WALL_HEIGHT = 5.0f;
@@ -783,45 +801,45 @@ void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor,
 	//Paredes eje X
 	model = glm::scale(model, glm::vec3(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH));
 	model = glm::translate(model, glm::vec3(-16.0f, WALL_YPOS, -90.0f));
-	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -58.7f));
-	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -59.3f));
-	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(5.3f, 0.0f, 35.0f));
-	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 88.0f));
-	buildWall(6, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));
-	buildWall(15, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(15, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 
 	//Paredes eje Z
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(WALL_WIDTH, WALL_HEIGHT, WALL_LENGTH));
 	model = glm::translate(model, glm::vec3(-81.29f, WALL_YPOS, -11.05f));
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
-	buildWall(1, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
+	buildWall(1, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.4f));
-	buildWall(6, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(45.0f, 0.0f, 1.0f));
-	buildWall(8, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(8, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
-	buildWall(6, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
-	buildWall(7, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -1.0f));
-	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 }
 
@@ -875,6 +893,29 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LamparaZoo.RenderModel();*/
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 50.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, -10.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-120.0f, 21.0f, 273.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+
 }
 
 
@@ -896,6 +937,15 @@ int main()
 
 	brickTexture = Texture("Textures/brick2.png");
 	brickTexture.LoadTextureA();
+	wallTextures.push_back(&brickTexture);
+
+	bushTexture = Texture("Textures/bushtexture.jpg");
+	bushTexture.LoadTextureA();
+	wallTextures.push_back(&bushTexture);
+
+	rockWallTexture = Texture("Textures/rockwall.png");
+	rockWallTexture.LoadTextureA();
+	wallTextures.push_back(&rockWallTexture);
 
 	LoadModels();
 
@@ -954,13 +1004,30 @@ int main()
 		5.0f);
 	spotLightCount++;
 
-	//luz fija
-	spotLights[1] = SpotLight(0.0f, 1.0f, 0.0f,
+	spotLights[1] = SpotLight(1.0f, 1.0f, 0.8f,
 		1.0f, 2.0f,
-		5.0f, 10.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		15.0f);
+		-120.0f, 21.0f, 285.0f,
+		0.0f, -10.0f, -35.0f,
+		5.0f, 0.0f, 0.0f,
+		20.0f);
+	spotLightCount++;
+
+	//Spotlight leon
+	spotLights[2] = SpotLight(1.0f, 1.0f, 0.5f,
+		1.0f, 2.0f,
+		-10.0f, 9.0f, 60.0f,
+		0.0f, 1.5f, -5.0f,
+		1.5f, 0.0f, 0.0f,
+		20.0f);
+	spotLightCount++;
+
+	//Spotlight leon
+	spotLights[3] = SpotLight(1.0f, 1.0f, 0.5f,
+		1.0f, 2.0f,
+		-10.0f, 9.0f, -20.0f,
+		0.0f, 1.5f, 5.0f,
+		1.5f, 0.0f, 0.0f,
+		20.0f);
 	spotLightCount++;
 
 	//se crean mas luces puntuales y spotlight 
@@ -1040,7 +1107,9 @@ int main()
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
-
+		
+		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		//shaderList[0].SetPointLights(pointLights, pointLightCount);
 		//información al shader de fuentes de iluminación
 
 		if (now >= day * n && now < day * (n + 1)) {
@@ -1049,9 +1118,6 @@ int main()
 		else if (now >= day * (n + 1) && now <= day * (n + 2)) {
 			shaderList[0].SetDirectionalLight(&mainLightNigth);
 		}
-
-		//shaderList[0].SetPointLights(pointLights, pointLightCount);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
@@ -1109,7 +1175,7 @@ int main()
 				// CARGA MUROS INTERNOS
 		//*****************************************************************
 
-		RenderInnerWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+		RenderInnerWalls(model, uniformModel, uniformColor, wallTextures, uniformSpecularIntensity, uniformShininess);
 		
 		//*****************************************************************
 				// CARGA LAMPARAS
