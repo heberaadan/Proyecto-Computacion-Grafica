@@ -113,7 +113,19 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		theWindow-> muevex -= 1.0;
 	}
 
-
+	// Luces Pointligth
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 0.0f;
+	}
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 1.0f;
+	}
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 2.0f;
+	}
 
 	if (key >= 0 && key < 1024)
 	{
