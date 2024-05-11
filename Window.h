@@ -13,6 +13,7 @@ public:
 	GLfloat getBufferHeight() { return bufferHeight; }
 	GLfloat getXChange();
 	GLfloat getYChange();
+	GLfloat Lanza() { return lanzar; }
 	GLfloat getmuevex() { return muevex; }
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
@@ -26,6 +27,7 @@ private:
 	bool keys[1024];
 	GLint bufferWidth, bufferHeight;
 	void createCallbacks();
+	GLfloat lanzar;
 	GLfloat lastX;
 	GLfloat lastY;
 	GLfloat xChange;
@@ -34,6 +36,5 @@ private:
 	bool mouseFirstMoved;
 	static void ManejaTeclado(GLFWwindow* window, int key, int code, int action, int mode);
 	static void ManejaMouse(GLFWwindow* window, double xPos, double yPos);
-
 };
 
