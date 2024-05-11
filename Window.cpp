@@ -127,7 +127,15 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
 	{
 		theWindow->luz = 2.0f;
-  }
+	}
+	if (key == GLFW_KEY_4 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 3.0f;
+	}
+	if (key == GLFW_KEY_5 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 4.0f;
+	}
 
 	if (key >= 0 && key < 1024)
 	{
