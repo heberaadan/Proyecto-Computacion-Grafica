@@ -28,12 +28,15 @@
 #include"Model.h"
 #include "Skybox.h"
 
+#include "Saitama.h"
+
 //para iluminación
 #include "CommonValues.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+
 const float toRadians = 3.14159265f / 180.0f;
 
 int n = 1; // Para controlar el tiempo de día y noche
@@ -49,12 +52,13 @@ float movOffsetburgir = 0.095f;
 float angArmBob = 0.0f;
 float angleHead = 0.0f; // Para la cabeza de Overgrownd
 float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
-float movbiciOffset = 0.095f, rotllantaB = 0.0f; 
+float movbiciOffset = 0.2f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
 float movOffSetC = 0.07f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
 float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
 float movnubeoffset, movnubeYoffset; 
-bool avanza = true, saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
+bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
+bool avanza = true, dig = true, ret = true; // Para el recorrido de la bici
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -62,7 +66,10 @@ std::vector<Shader> shaderList;
 
 std::vector<Texture*> wallTextures;
 
+//Saitama pelon;
+
 Camera camera;
+Camera camaraAvatar, camaraAerea, camaraLibre, currentCamera;
 
 Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
 
@@ -82,7 +89,7 @@ Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Le
 Model Pato, Shuriken, Bamboo, LamparaZoo_On, LampGar, Pasto1, Saitama, Tutsumaki;
 Model Planta1, Planta2, Planta3, Planta4, Planta5, Pasto;
 Model SpotlightModel, PlankStage;
-Model mesa, cangre
+Model mesa, cangre;
 
 // Puertas
 Model LionGate;
@@ -606,11 +613,6 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 
 	glm::mat4 Over(1.0);
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
-	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Overgrown.RenderModel();
 
 	if (now >= day * n && now < day * (n + 1)) { // DIA
 		model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
@@ -662,9 +664,17 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 		// Bicicleta 
 	// *********************************************************************
 	glm::mat4 bici(1.0);
-
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(260, 0.0f, movbiciz));
+	model = glm::translate(model, glm::vec3(movbicix, 0.0f, movbiciz));
+	if (avanza) {
+		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (dig) {
+		model = glm::rotate(model, glm::radians(-57.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (ret) {
+		model = glm::rotate(model, glm::radians(-33.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	bici = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1459,6 +1469,52 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	SpotlightModel.RenderModel();
 }
 
+//void InitializeCameras() {
+//
+//	camRot = glm::rotate(camRot, glm::radians(dexter.getRotY()), glm::vec3(0.0f, 1.0f, 0.0f));
+//
+//	camPos = dexter.getPos() + glm::vec3(camRot * camoffset);
+//
+//	camaraAvatar = Camera(camP, glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 1.0f, -1.0f); //
+//	camaraAerea = Camera(glm::vec3(0.0f, 400.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 5.5f, 0.5f);
+//	camaraLibre = Camera(glm::vec3(0.0f, 200.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 90.0f, 5.5f, 0.5f);
+//
+//	currentCamera = &camaraLibre;
+//}
+
+//void setCamera(GLint cameraNumber) {
+//	//Camara 1 camara del avatar, camara 2 camara aerea, camara 3 camara libre
+//
+//	//Calculo de la rotacion del avatar
+//	camRot = glm::rotate(camRot, glm::radians(mainWindow.getRotacionAvatar() * deltaTime), glm::vec3(0.0f, 1.0f, 0.0f));
+//	camPos = dexter.getPos() + glm::vec3(camRot * camoffset);
+//	camaraAvatar.mouseControl(mainWindow.getRotacionAvatar() * deltaTime, 0.0f);
+//	switch (cameraNumber)
+//	{
+//	case 1:
+//		camaraAvatar.setPosicionX(camPos.x);
+//		camaraAvatar.setPosicionY(camPos.y);
+//		camaraAvatar.setPosicionZ(camPos.z);
+//		currentCamera = &camaraAvatar;
+//		break;
+//	case 2:
+//		camaraAerea.keyControlAerea(mainWindow.getsKeys(), deltaTime);
+//		//camaraAerea.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+//		currentCamera = &camaraAerea;
+//		break;
+//	case 3:
+//		camaraLibre.keyControl(mainWindow.getsKeys(), deltaTime);
+//		camaraLibre.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+//		currentCamera = &camaraLibre;
+//		break;
+//	default:
+//		camaraLibre.keyControl(mainWindow.getsKeys(), deltaTime);
+//		camaraLibre.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+//		currentCamera = &camaraLibre;
+//		break;
+//	}
+//}
+
 
 int main()
 {
@@ -1615,6 +1671,8 @@ int main()
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
+		setCamera(mainWindow.getTipoCamara());
+
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
@@ -1622,7 +1680,6 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		printf("aire: %i angArm: %f movburgir: %f \n", !aire, angArmB, movburgir);
 		if (!aire) { // Para el movimiento del lanzamiento de la burgir
 			if (angArmB > -40) {
 				angArmB -= 0.5f;
@@ -1681,23 +1738,44 @@ int main()
 			}
 		}
 
-		if (avanza) {
-			if (movbiciz < 94) { // Para mover a la bici
-				movbiciz += movbiciOffset * deltaTime;
-				rotllantaB += 6.0f;
+		printf("x: %f z: %f ", movbicix, movbiciz);
+
+		if ( (movbicix > 41 && movbicix < 261) && (movbiciz < 76 && movbiciz > -261)) {
+			if (avanza) { // Para mover la bici
+				printf(" anvanza \n");
+				if (movbiciz < 75) {
+					movbiciz += movbiciOffset * deltaTime;
+					rotllantaB += 7.0f;
+				}
+				else {
+					avanza = !avanza;
+				}
 			}
-			else {
-				avanza = !avanza;
+			else if (dig) {
+				printf(" dig \n");
+				if (movbiciz > -250) {
+					movbicix = (movbiciz + 330.11) / 1.558;
+					movbiciz -= movbiciOffset * deltaTime;
+					rotllantaB += 7.0f;
+				}
+				else {
+					dig = !dig;
+				}
+			}
+			else if (ret) {
+				printf(" ret \n");
+				if (movbicix < 259) {
+					movbicix += movbiciOffset * deltaTime;
+					rotllantaB += 7.0f;
+				}
+				else {
+					ret = !ret;
+				}
 			}
 		}
 		else {
-			if (movbiciz > -260) {
-				movbiciz -= movbiciOffset * deltaTime;
-				rotllantaB -= 6.0f;
-			}
-			else {
-				avanza = !avanza;
-			}
+			movbicix = 255;
+			movbiciz = -259;
 		}
 
 		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
