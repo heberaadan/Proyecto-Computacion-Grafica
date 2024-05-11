@@ -36,28 +36,52 @@
 #include "Material.h"
 const float toRadians = 3.14159265f / 180.0f;
 
+int n = 1; // Para controlar el tiempo de día y noche
+int day = 30;
+int burgir = 3;
+float angle = 0.0f; // Para generar el glich
+float ang = 0.0f; // Para el cangremovil
+float angArm = 0.0f; // Para el saludo de Calamardo
+float angArmB = 0.0f; // Para que bob lance las cangreburgers 
+float movburgir = 35.8f; // Para la animación de la cangreburguer
+float movOffsetburgir = 0.095f;
+float angArmBob = 0.0f;
+float angleHead = 0.0f; // Para la cabeza de Overgrownd
+float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
+float movbiciOffset = 0.095f, rotllantaB = 0.0f; 
+float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
+float movOffSetC = 0.07f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
+float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
+float movnubeoffset, movnubeYoffset; 
+bool avanza = true, saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
+
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
+std::vector<Texture*> wallTextures;
+
 Camera camera;
 
-Texture pisoTexture, brickTexture, pisoNigth;
+Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
 
 // Edificios
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
+Model BrazoCalamardo, BodyOver, HeadOver, BrazoBob;
 
 // Vehículos
 Model Cangremovil, Bicicleta, Nube;
-Model llantaC;
+Model llantaC, llantaB;
 
 // Decoración 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
 Model Pato, Shuriken, Bamboo, LamparaZoo_On, LampGar, Pasto1, Saitama, Tutsumaki;
 Model Planta1, Planta2, Planta3, Planta4, Planta5, Pasto;
+Model SpotlightModel, PlankStage;
+Model mesa, cangre
 
 // Puertas
 Model LionGate;
@@ -228,40 +252,40 @@ void CreateCubeMesh()
 		//x		y		z		S		T			NX		NY		NZ
 		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//0
 		0.5f, -0.5f,  0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	-1.0f,	//1
-		0.5f,  0.5f,  0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//2
-		-0.5f,  0.5f,  0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//3
+		0.5f,  0.5f,  0.5f,		3.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//2
+		-0.5f,  0.5f,  0.5f,	0.0f, 2.0f,			0.0f,	0.0f,	-1.0f,	//3
 		// right
 		//x		y		z		S		T
 		0.5f, -0.5f,  0.5f,	    0.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
 		0.5f, -0.5f,  -0.5f,	3.0f, 0.0f,			-1.0f,	0.0f,	0.0f,
-		0.5f,  0.5f,  -0.5f,	0.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
-		0.5f,  0.5f,  0.5f,	    3.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  -0.5f,	3.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
+		0.5f,  0.5f,  0.5f,	    0.0f, 2.0f,			-1.0f,	0.0f,	0.0f,
 		// back
 		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,			0.0f,	0.0f,	1.0f,
 		0.5f, -0.5f, -0.5f,		3.0f, 0.0f,			0.0f,	0.0f,	1.0f,
-		0.5f,  0.5f, -0.5f,		0.0f, 2.0f,			0.0f,	0.0f,	1.0f,
-		-0.5f,  0.5f, -0.5f,	3.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+		0.5f,  0.5f, -0.5f,		3.0f, 2.0f,			0.0f,	0.0f,	1.0f,
+		-0.5f,  0.5f, -0.5f,	0.0f, 2.0f,			0.0f,	0.0f,	1.0f,
 
 		// left
 		//x		y		z		S		T
 		-0.5f, -0.5f,  -0.5f,	0.0f, 0.0f,			1.0f,	0.0f,	0.0f,
 		-0.5f, -0.5f,  0.5f,	3.0f, 0.0f,			1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  0.5f,	0.0f, 2.0f,			1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  -0.5f,	3.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  0.5f,	3.0f, 2.0f,			1.0f,	0.0f,	0.0f,
+		-0.5f,  0.5f,  -0.5f,	0.0f, 2.0f,			1.0f,	0.0f,	0.0f,
 
 		// bottom
 		//x		y		z		S		T
 		-0.5f, -0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	1.0f,	0.0f,
 		0.5f,  -0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	1.0f,	0.0f,
-		 0.5f,  -0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	1.0f,	0.0f,
-		-0.5f, -0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+		 0.5f,  -0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	1.0f,	0.0f,
+		-0.5f, -0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	1.0f,	0.0f,
 
 		//UP
 		 //x		y		z		S		T
 		 -0.5f, 0.5f,  0.5f,	0.0f, 0.0f,				0.0f,	-1.0f,	0.0f,
 		 0.5f,  0.5f,  0.5f,	3.0f, 0.0f,			0.0f,	-1.0f,	0.0f,
-		  0.5f, 0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
-		 -0.5f, 0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+		  0.5f, 0.5f,  -0.5f,	3.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
+		 -0.5f, 0.5f,  -0.5f,	0.0f, 2.0f,			0.0f,	-1.0f,	0.0f,
 
 	};
 
@@ -281,11 +305,10 @@ void CreateShaders()
 void LoadModels() {
 
 	// Edificios
-	/*
 	KameHouse = Model();
-	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");*/
-	/*Capsule = Model();
-	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");*/
+	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
+	Capsule = Model();
+	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
 	Flores = Model();
@@ -304,26 +327,38 @@ void LoadModels() {
 	Karin.LoadModel("Models/DragonBall/Karin/Karin.obj");
 	Bob = Model();
 	Bob.LoadModel("Models/BobEsponja/Bob/BobEsponja.obj");
+	BrazoBob = Model();
+	BrazoBob.LoadModel("Models/BobEsponja/Bob/BrazoBob.obj");
 	Calamardo = Model();
 	Calamardo.LoadModel("Models/BobEsponja/Calamardo/Calamardo.obj");
+	BrazoCalamardo = Model();
+	BrazoCalamardo.LoadModel("Models/BobEsponja/Calamardo/brazoCalamardo.obj");
 	Gary = Model();
 	Gary.LoadModel("Models/BobEsponja/Gary/Gary.obj");
 	Overgrown = Model();
 	Overgrown.LoadModel("Models/OnePunchMan/Overgrown/Overgrown.obj");
+
 	Saitama = Model();
 	Saitama.LoadModel("Models/OnePunchMan/Saitama/Saitama.obj");
 	Tutsumaki = Model();
 	Tutsumaki.LoadModel("Models/OnePunchMan/Tutsumaki/Tutsumaki.obj");
 
+	BodyOver = Model();
+	BodyOver.LoadModel("Models/OnePunchMan/Overgrown/BodyOvergrown.obj");
+	HeadOver = Model();
+	HeadOver.LoadModel("Models/OnePunchMan/Overgrown/Cabeza.obj");
+
 	// Vehículos
 	Cangremovil = Model();
 	Cangremovil.LoadModel("Models/BobEsponja/Cangremovil/Cangremovil.obj");
 	Bicicleta = Model();
-	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/Bicicleta.obj");
+	Bicicleta.LoadModel("Models/OnePunchMan/Bicicleta/bici.obj");
 	Nube = Model();
 	Nube.LoadModel("Models/DragonBall/Nube/Nube.obj");
 	llantaC = Model();
 	llantaC.LoadModel("Models/BobEsponja/Cangremovil/llantaC.obj");
+	llantaB = Model();
+	llantaB.LoadModel("Models/OnePunchMan/Bicicleta/llantaB.obj");
 
 	// Decoración
 	Piedra1 = Model();
@@ -356,6 +391,7 @@ void LoadModels() {
 	// Vegetación
 	Bamboo = Model();
 	Bamboo.LoadModel("Models/Decoracion/Vegetacion/Bamboo.obj");
+
 	Pasto = Model(); 
 	Pasto.LoadModel("Models/Decoracion/Vegetacion/Pasto.obj");
 	Pasto1 = Model();
@@ -370,6 +406,16 @@ void LoadModels() {
 	Planta4.LoadModel("Models/Decoracion/Vegetacion/Planta4.obj");
 	Planta5 = Model();
 	Planta5.LoadModel("Models/Decoracion/Vegetacion/Planta5.obj");
+
+	SpotlightModel = Model();
+	SpotlightModel.LoadModel("Models/Decoracion/Decoracion/Spotlight.obj");
+	PlankStage = Model();
+	PlankStage.LoadModel("Models/Decoracion/Decoracion/PlankStage.obj");
+	mesa = Model();
+	mesa.LoadModel("Models/Decoracion/Decoracion/mesaKrusty.obj");
+	cangre = Model();
+	cangre.LoadModel("Models/Decoracion/Decoracion/burgir.obj");
+
 
 	// Puertas
 	LionGate = Model();
@@ -425,13 +471,14 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Kame House
 	// *********************************************************************
-	/*
+	
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(300.0f, 0.0f, -300.0f));
-	model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, -250.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	KameHouse.RenderModel();
-	*/
+
 	// *********************************************************************
 			// Departamento Saitama
 	// *********************************************************************
@@ -444,9 +491,32 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	CasaSaitama.RenderModel();
 }
 
-void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now, int n, int day, float angle) {
+void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
 
 	float x, y, z;
+  
+  // *********************************************************************
+			// Saitama
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(250.0f, 0.0f, 200.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Saitama.RenderModel();
+
+	// *********************************************************************
+			// Tutsumaki
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3( 40.0f, 0.3f, 200.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Tutsumaki.RenderModel();
+  
 	// *********************************************************************
 			// Maestro Roshi 
 	// *********************************************************************
@@ -462,52 +532,52 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 			// Bob Esponja
 	// *********************************************************************
 
+	glm::mat4 Sponge(1.0);
+
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-230.0f, 0.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-208.0f, 0.0f, 35.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	Sponge = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Bob.RenderModel();
+
+	//:=========== Brazo :===========
+
+	model = Sponge;
+	model = glm::translate(model, glm::vec3(4.0f, 6.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(angArmB), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	BrazoBob.RenderModel();
 
 	// *********************************************************************
 			// Calamardo
 	// *********************************************************************
 
+	glm::mat4 calamardo(1.0);
+
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-220.0f, 0.0f, -90.0f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	calamardo = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Calamardo.RenderModel();
 
-	// *********************************************************************
-			// Gary
-	// *********************************************************************
+	//:=========== Brazo :===========
 
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -190.0f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	model = calamardo;
+	model = glm::translate(model, glm::vec3(0.0f, 8.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(angArm), glm::vec3(0.0f, 0.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Gary.RenderModel();
-
-	//// *********************************************************************
-	//	// León
-	//// *********************************************************************
-
-	//model = modelaux;
-	//model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
-	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-	//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Leon.RenderModel();
+	BrazoCalamardo.RenderModel();
 
 	// *********************************************************************
-			// Karin
+			// Karin y León 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-60.0f, -0.5f, 0.0f));
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 20.0f));
 	if (now >= day * n && now < day * (n + 1)) {
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
@@ -533,11 +603,11 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 		Leon.RenderModel();
 	}
 	
-
 	// *********************************************************************
-			// Overgrown
+			// Overgrown y Gary
 	// *********************************************************************
 
+	glm::mat4 Over(1.0);
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -545,81 +615,125 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Overgrown.RenderModel();
 
-	// *********************************************************************
-			// Saitama
-	// *********************************************************************
+	if (now >= day * n && now < day * (n + 1)) { // DIA
+		model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		if (now >= (day * (n + 1) - 5) && day < day * (n + 1)) { // Genera un glich 10 seg antes de que sea de noche 
+			x = rand() % 2;
+			y = rand() % 2;
+			z = rand() % 2;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(x, y, z));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		Gary.RenderModel();
+	}
+	else if (now >= day * (n + 1) && now <= day * (n + 2)) { // NOCHE
+		model = glm::translate(model, glm::vec3(-50.0f, 9.0f, -170.0f));
+		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		Over = model;
+		if (now >= (day * (n + 2) - 5) && day < day * (n + 2)) {
+			x = rand() % 2;
+			y = rand() % 2;
+			z = rand() % 2;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(x, y, z));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		BodyOver.RenderModel();
 
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(250.0f, 0.0f, 200.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Saitama.RenderModel();
+		//:=========== Cabeza :===========
 
-	// *********************************************************************
-			// Tutsumaki
-	// *********************************************************************
+		model = Over;
+		model = glm::translate(model, glm::vec3(0.0f, 4.0f, 7.0f));
+		model = glm::rotate(model, glm::radians(angleHead), glm::vec3(0.0f, 1.0f, 0.0f));
+		if (now >= (day * (n + 2) - 5) && day < day * (n + 2)) {
+			x = rand() % 2;
+			y = rand() % 2;
+			z = rand() % 2;
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(x, y, z));
+		}
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		HeadOver.RenderModel();
+	}	
 
-	model = modelaux;
-	model = glm::translate(model, glm::vec3( 40.0f, 0.3f, 200.0f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Tutsumaki.RenderModel();
+	
 }
 
-
-void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, float movcangre, float rotllantaC) {
+void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 
 	// *********************************************************************
 		// Bicicleta 
 	// *********************************************************************
+	glm::mat4 bici(1.0);
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(170.0f, 0.3f, -200.0f));
-	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(260, 0.0f, movbiciz));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	bici = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Bicicleta.RenderModel();
 
-	glm::mat4 cangre(1.0);
+	//:============ LLANTA TRASERA :============
+
+	model = bici;
+	model = glm::translate(model, glm::vec3(0.5f, 3.6f, 5.6f));
+	model = glm::rotate(model, glm::radians(rotllantaB), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaB.RenderModel();
+
+	//:============ LLANTA DELANTERA :============
+
+	model = bici;
+	model = glm::translate(model, glm::vec3(0.5f, 3.3f, -5.7f));
+	model = glm::rotate(model, glm::radians(rotllantaB), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	llantaB.RenderModel();
 
 	// *********************************************************************
 		// Cangremovil
 	// *********************************************************************
+	glm::mat4 cangre(1.0);
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(180.0f, 1.3f, -170.0f + movcangre));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	cangre = model;
+	if (movcangre < 94) { // EL COCHE AVANZA
+		model = glm::translate(model, glm::vec3(180.0f, 1.3f, movcangre));
+		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		cangre = model;
+	}
+	else { // EL COCHE SE VOLCA
+		
+		model = glm::translate(model, glm::vec3(180.0f, -0.031*pow(movcangre,2) + 7.78 * movcangre - 449.617, movcangre));
+		model = glm::rotate(model, glm::radians(ang), glm::vec3(1.0f, 1.0f, 1.0f));
+		cangre = model;
+	}
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Cangremovil.RenderModel();
 
 	//:============ LLANTAS DELANTERAS :============
 	
 	model = cangre;
-	model = glm::translate(model, glm::vec3(10.0f, 0.0f, -8.0f)); // Derecha
-	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(10.0f, 1.0f, -8.0f)); // Derecha
+	model = glm::rotate(model, glm::radians(-rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); 
 	llantaC.RenderModel();
 
 	model = cangre;
-	model = glm::translate(model, glm::vec3(-8.0f, 0.0f, -8.0f)); // Izquierda
-	model = glm::rotate(model, glm::radians(rotllantaC),glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-8.0f, 1.0f, -8.0f)); // Izquierda
+	model = glm::rotate(model, glm::radians(-rotllantaC),glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	llantaC.RenderModel();
 
 	//:============ LLANTAS TRASERAS :============
 
 	model = cangre;
-	model = glm::translate(model, glm::vec3(12.0f, 0.0f, 4.0f)); // Derecha
-	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(12.0f, 1.0f, 4.0f)); // Derecha
+	model = glm::rotate(model, glm::radians(-rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	llantaC.RenderModel();
 
 	model = cangre;
-	model = glm::translate(model, glm::vec3(-10.0f, 0.0f, 4.0f)); // Izquierda
-	model = glm::rotate(model, glm::radians(rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-10.0f, 1.0f, 4.0f)); // Izquierda
+	model = glm::rotate(model, glm::radians(-rotllantaC), glm::vec3(1.0f, 0.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	llantaC.RenderModel();
 
@@ -628,7 +742,7 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, f
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(170.0f, 20.0f, -140.0f));
+	model = glm::translate(model, glm::vec3(170.0f-movnubeX, 10.0*sin(glm::radians(movnubeY)*0.1f) + 70, -140.0f));
 	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1114,6 +1228,49 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LampGar.RenderModel();
+
+	//Bamboo.RenderModel();
+
+	// *********************************************************************
+		// Stage de Leon
+	// *********************************************************************
+	
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 0.0f, 20.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	PlankStage.RenderModel();
+
+	// *********************************************************************
+		// Mesa
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-215.0f, 0.0f, 35.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	mesa.RenderModel();
+
+	// *********************************************************************
+		// Cangreburger
+	// *********************************************************************
+	
+	
+	for (int i = 0; i < burgir; i++) {
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-213.0f - 2*i, 4.0f, 35.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cangre.RenderModel();
+	}
+
+	if (aire){
+		model = modelaux;
+		model = glm::translate(model, glm::vec3(-210.5f, (-0.005 * pow(movburgir, 2)) - 0.362 * movburgir + 23.804, movburgir));
+		model = glm::rotate(model, glm::radians(ang), glm::vec3(1.0f, 0.0f, 1.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+		cangre.RenderModel();
+	}
 }
 
 
@@ -1173,7 +1330,7 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	LionGate.RenderModel();
 }
 
-void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* texture,
+void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, std::vector<Texture*> wallTextures,
 	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
 	
 	float WALL_HEIGHT = 5.0f;
@@ -1190,49 +1347,49 @@ void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor,
 	//Paredes eje X
 	model = glm::scale(model, glm::vec3(WALL_LENGTH, WALL_HEIGHT, WALL_WIDTH));
 	model = glm::translate(model, glm::vec3(-16.0f, WALL_YPOS, -90.0f));
-	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -58.7f));
-	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(-7.06f, 0.0f, -59.3f));
-	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(5.3f, 0.0f, 35.0f));
-	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 88.0f));
-	buildWall(6, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(-1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(7.0f, 0.0f, 0.0f));
-	buildWall(15, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(15, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[2], uniformSpecularIntensity, uniformShininess, color);
 
 	//Paredes eje Z
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(WALL_WIDTH, WALL_HEIGHT, WALL_LENGTH));
 	model = glm::translate(model, glm::vec3(-81.29f, WALL_YPOS, -11.05f));
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.0f));
-	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
-	buildWall(1, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
+	buildWall(1, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -1.4f));
-	buildWall(6, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(45.0f, 0.0f, 1.0f));
-	buildWall(8, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(8, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
-	buildWall(6, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
-	buildWall(7, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(7, glm::vec3(0.0f, 0.0f, 1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -1.0f));
-	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, texture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
 
 }
 
-void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now, int n, int day) {
+void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
 
 	// *********************************************************************
 		// Lámpara Zoológico
@@ -1282,6 +1439,27 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LamparaZoo.RenderModel();*/
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 50.0f));
+	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, -10.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-120.0f, 21.0f, 273.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
 }
 
 
@@ -1294,7 +1472,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 2.0f, 0.5f);
+	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 2.0f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -1303,6 +1481,15 @@ int main()
 
 	brickTexture = Texture("Textures/brick2.png");
 	brickTexture.LoadTextureA();
+	wallTextures.push_back(&brickTexture);
+
+	bushTexture = Texture("Textures/bushtexture.jpg");
+	bushTexture.LoadTextureA();
+	wallTextures.push_back(&bushTexture);
+
+	rockWallTexture = Texture("Textures/rockwall.png");
+	rockWallTexture.LoadTextureA();
+	wallTextures.push_back(&rockWallTexture);
 
 	LoadModels();
 
@@ -1383,13 +1570,30 @@ int main()
 		5.0f);
 	spotLightCount++;
 
-	//luz fija
-	spotLights[1] = SpotLight(0.0f, 1.0f, 0.0f,
+	spotLights[1] = SpotLight(1.0f, 1.0f, 0.8f,
 		1.0f, 2.0f,
-		5.0f, 10.0f, 0.0f,
-		0.0f, -5.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
-		15.0f);
+		-120.0f, 21.0f, 285.0f,
+		0.0f, -10.0f, -35.0f,
+		5.0f, 0.0f, 0.0f,
+		20.0f);
+	spotLightCount++;
+
+	//Spotlight leon
+	spotLights[2] = SpotLight(1.0f, 1.0f, 0.5f,
+		1.0f, 2.0f,
+		-10.0f, 9.0f, 60.0f,
+		0.0f, 1.5f, -5.0f,
+		1.5f, 0.0f, 0.0f,
+		20.0f);
+	spotLightCount++;
+
+	//Spotlight leon
+	spotLights[3] = SpotLight(1.0f, 1.0f, 0.5f,
+		1.0f, 2.0f,
+		-10.0f, 9.0f, -20.0f,
+		0.0f, 1.5f, 5.0f,
+		1.5f, 0.0f, 0.0f,
+		20.0f);
 	spotLightCount++;
 
 	//se crean mas luces puntuales y spotlight 
@@ -1400,12 +1604,8 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 
-	int n = 1; // Para controlar el tiempo de día y noche
-	int day = 20;
-	float angle = 0.0f; // Para generar el glich
-
-	float movcangre = 0.0f, rotllantaC = 0.0f; // Para mover al cangremovil
-	float movOffSetC = 0.06f, rotllantaOffSetC = 5.0f;;
+	movnubeoffset = 0.05f;
+	movnubeYoffset = 12.0f;
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -1425,12 +1625,99 @@ int main()
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//skybox.DrawSkybox(camera.calculateViewMatrix(), projection);
+		printf("aire: %i angArm: %f movburgir: %f \n", !aire, angArmB, movburgir);
+		if (!aire) { // Para el movimiento del lanzamiento de la burgir
+			if (angArmB > -40) {
+				angArmB -= 0.5f;
+			}
+			else {
+				aire = !aire;
+				burgir -= 1;
+			}
+		}
+		else {
+			if (angArmB < 25) {
+				angArmB += 1.0f;
+			}
 
-		if (movcangre > -100) { // Para el movimiento del coche
+			if (movburgir > -110) {
+				movburgir -= movOffsetburgir * deltaTime;
+				ang += 8.0f;
+			}
+			else {
+				aire = !aire;
+				movburgir = 35.8f;
+			}
+		}
+	
+		if (mover) { // Para mover la cabeza de Overgrown
+			if (angleHead < 35) {
+				angleHead += 0.5f;
+			}
+			else {
+				mover = !mover;
+			}
+		}
+		else {
+			if (angleHead > -35) {
+				angleHead -= 0.5f;
+			}
+			else {
+				mover = !mover;
+			}
+		}
+
+		if (saludo) { // Para el saludo de Calamardo
+			if (angArm < 45) {
+				angArm += 1.0f;
+			}
+			else {
+				saludo = !saludo;
+			}
+		}
+		else {
+			if (angArm > -45) {
+				angArm -= 1.0f;
+			}
+			else {
+				saludo = !saludo;
+			}
+		}
+
+		if (avanza) {
+			if (movbiciz < 94) { // Para mover a la bici
+				movbiciz += movbiciOffset * deltaTime;
+				rotllantaB += 6.0f;
+			}
+			else {
+				avanza = !avanza;
+			}
+		}
+		else {
+			if (movbiciz > -260) {
+				movbiciz -= movbiciOffset * deltaTime;
+				rotllantaB -= 6.0f;
+			}
+			else {
+				avanza = !avanza;
+			}
+		}
+
+		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
 			movcangre += movOffSetC * deltaTime;
 			rotllantaC += rotllantaOffSetC * deltaTime;
 		}
+		else if (movcangre >= 94 && movcangre < 160){
+			movcangre += movOffsetC2 * deltaTime;
+			ang += 5.0f;
+		}
+
+		if (movnubeYoffset > 360.0f) {
+			movnubeYoffset = 0.0f;
+		}
+
+		movnubeY += movnubeYoffset;
+		movnubeX += movnubeoffset * deltaTime;
 
 		if (now >= day*(n + 2)) {
 			n = n + 2;
@@ -1463,7 +1750,9 @@ int main()
 		glm::vec3 lowerLight = camera.getCameraPosition();
 		lowerLight.y -= 0.3f;
 		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
-
+		
+		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		//shaderList[0].SetPointLights(pointLights, pointLightCount);
 		//información al shader de fuentes de iluminación
 
 		if (now >= day * n && now < day * (n + 1)) {
@@ -1490,7 +1779,7 @@ int main()
 
 		//SpotLigth 
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-
+    
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -1524,13 +1813,13 @@ int main()
 				// CARGA LOS PERSONAJES
 		//*****************************************************************
 
-		RenderPersonajes(model, modelaux, uniformModel, now, n, day, angle);
+		RenderPersonajes(model, modelaux, uniformModel, now);
 
 		//*****************************************************************
 				// CARGA LOS VEHÍCULOS
 		//*****************************************************************
 
-		RenderVehiculos(model, modelaux, uniformModel, movcangre, rotllantaC);
+		RenderVehiculos(model, modelaux, uniformModel);
 		//*****************************************************************
 				// CARGA LA DECORACIÓN
 		//*****************************************************************
@@ -1547,13 +1836,13 @@ int main()
 				// CARGA MUROS INTERNOS
 		//*****************************************************************
 
-		RenderInnerWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+		RenderInnerWalls(model, uniformModel, uniformColor, wallTextures, uniformSpecularIntensity, uniformShininess);
 		
 		//*****************************************************************
 				// CARGA LAMPARAS
 		//*****************************************************************
 
-		RenderLamps(model, modelaux, uniformModel, now, n, day);
+		RenderLamps(model, modelaux, uniformModel, now);
 
 		glUseProgram(0);
 
