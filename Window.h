@@ -12,6 +12,7 @@ public:
 	GLfloat getBufferWidth() { return bufferWidth; }
 	GLfloat getBufferHeight() { return bufferHeight; }
 	GLfloat getXChange();
+	GLboolean getLuces() { return luz; }
 	GLfloat getYChange();
 	GLfloat Lanza() { return lanzar; }
 	GLfloat getmuevex() { return muevex; }
@@ -33,6 +34,7 @@ private:
 	GLfloat lastY;
 	GLfloat xChange;
 	GLfloat yChange;
+	GLfloat luz;
 	GLfloat muevex;
 	GLfloat luz;
 	bool mouseFirstMoved;

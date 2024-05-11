@@ -44,6 +44,7 @@ float ang = 0.0f; // Para el cangremovil
 float angArm = 0.0f; // Para el saludo de Calamardo
 float angArmB = 0.0f; // Para que bob lance las cangreburgers 
 float movburgir = 35.8f; // Para la animación de la cangreburguer
+float angburgir = 0.0f;
 float movOffsetburgir = 0.095f;
 float angArmBob = 0.0f;
 float angleHead = 0.0f; // Para la cabeza de Overgrownd
@@ -69,7 +70,7 @@ Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 
 // Personajes
-Model Roshi, Bob, Calamardo, Gary, Karin, Overgrown;
+Model Roshi, Bob, Calamardo, Gary, Karin;
 Model BrazoCalamardo, BodyOver, HeadOver, BrazoBob;
 
 // Vehículos
@@ -335,14 +336,10 @@ void LoadModels() {
 	BrazoCalamardo.LoadModel("Models/BobEsponja/Calamardo/brazoCalamardo.obj");
 	Gary = Model();
 	Gary.LoadModel("Models/BobEsponja/Gary/Gary.obj");
-	Overgrown = Model();
-	Overgrown.LoadModel("Models/OnePunchMan/Overgrown/Overgrown.obj");
-
 	Saitama = Model();
 	Saitama.LoadModel("Models/OnePunchMan/Saitama/Saitama.obj");
 	Tutsumaki = Model();
 	Tutsumaki.LoadModel("Models/OnePunchMan/Tutsumaki/Tutsumaki.obj");
-
 	BodyOver = Model();
 	BodyOver.LoadModel("Models/OnePunchMan/Overgrown/BodyOvergrown.obj");
 	HeadOver = Model();
@@ -1267,7 +1264,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	if (aire){
 		model = modelaux;
 		model = glm::translate(model, glm::vec3(-210.5f, (-0.005 * pow(movburgir, 2)) - 0.362 * movburgir + 23.804, movburgir));
-		model = glm::rotate(model, glm::radians(ang), glm::vec3(1.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(angburgir), glm::vec3(1.0f, 0.0f, 1.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cangre.RenderModel();
 	}
@@ -1642,7 +1639,7 @@ int main()
 
 			if (movburgir > -110) {
 				movburgir -= movOffsetburgir * deltaTime;
-				ang += 8.0f;
+				angburgir += 8.0f;
 			}
 			else {
 				aire = !aire;
