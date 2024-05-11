@@ -38,7 +38,7 @@
 const float toRadians = 3.14159265f / 180.0f;
 
 int n = 1; // Para controlar el tiempo de día y noche
-int day = 10;
+int day = 30;
 int burgir = 3;
 float angle = 0.0f; // Para generar el glich
 float ang = 0.0f; // Para el cangremovil
@@ -1688,7 +1688,7 @@ int main()
 
 		
 
-		if ( (movbicix > 41 && movbicix < 261) && (movbiciz < 76 && movbiciz > -261)) {
+		if ( (movbicix > 41 && movbicix < 261) && (movbiciz < 77 && movbiciz > -261)) {
 			if (avanza) { // Para mover la bici
 				if (movbiciz < 75) {
 					movbiciz += movbiciOffset * deltaTime;
@@ -1723,8 +1723,6 @@ int main()
 			movbicix = 255;
 			movbiciz = -259;
 		}
-
-		printf("x: %f z: %f cangre: %f \n",movbicix, movbiciz, movcangre);
 
 		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
 			movcangre += movOffSetC * deltaTime;
