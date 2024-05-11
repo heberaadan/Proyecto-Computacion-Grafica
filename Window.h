@@ -16,7 +16,6 @@ public:
 	GLfloat getYChange();
 	GLfloat Lanza() { return lanzar; }
 	GLfloat getmuevex() { return muevex; }
-	GLboolean getLuces() { return luz; }
 	bool getShouldClose() {
 		return  glfwWindowShouldClose(mainWindow);}
 	bool* getsKeys() { return keys; }
@@ -34,7 +33,6 @@ private:
 	GLfloat lastY;
 	GLfloat xChange;
 	GLfloat yChange;
-	GLfloat luz;
 	GLfloat muevex;
 	GLfloat luz;
 	bool mouseFirstMoved;

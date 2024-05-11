@@ -28,8 +28,6 @@
 #include"Model.h"
 #include "Skybox.h"
 
-#include "Saitama.h"
-
 //para iluminación
 #include "CommonValues.h"
 #include "DirectionalLight.h"
@@ -1469,53 +1467,6 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	SpotlightModel.RenderModel();
 }
 
-//void InitializeCameras() {
-//
-//	camRot = glm::rotate(camRot, glm::radians(dexter.getRotY()), glm::vec3(0.0f, 1.0f, 0.0f));
-//
-//	camPos = dexter.getPos() + glm::vec3(camRot * camoffset);
-//
-//	camaraAvatar = Camera(camP, glm::vec3(0.0f, 1.0f, 0.0f), 90.0f, 0.0f, 1.0f, -1.0f); //
-//	camaraAerea = Camera(glm::vec3(0.0f, 400.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 5.5f, 0.5f);
-//	camaraLibre = Camera(glm::vec3(0.0f, 200.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 90.0f, 5.5f, 0.5f);
-//
-//	currentCamera = &camaraLibre;
-//}
-
-//void setCamera(GLint cameraNumber) {
-//	//Camara 1 camara del avatar, camara 2 camara aerea, camara 3 camara libre
-//
-//	//Calculo de la rotacion del avatar
-//	camRot = glm::rotate(camRot, glm::radians(mainWindow.getRotacionAvatar() * deltaTime), glm::vec3(0.0f, 1.0f, 0.0f));
-//	camPos = dexter.getPos() + glm::vec3(camRot * camoffset);
-//	camaraAvatar.mouseControl(mainWindow.getRotacionAvatar() * deltaTime, 0.0f);
-//	switch (cameraNumber)
-//	{
-//	case 1:
-//		camaraAvatar.setPosicionX(camPos.x);
-//		camaraAvatar.setPosicionY(camPos.y);
-//		camaraAvatar.setPosicionZ(camPos.z);
-//		currentCamera = &camaraAvatar;
-//		break;
-//	case 2:
-//		camaraAerea.keyControlAerea(mainWindow.getsKeys(), deltaTime);
-//		//camaraAerea.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-//		currentCamera = &camaraAerea;
-//		break;
-//	case 3:
-//		camaraLibre.keyControl(mainWindow.getsKeys(), deltaTime);
-//		camaraLibre.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-//		currentCamera = &camaraLibre;
-//		break;
-//	default:
-//		camaraLibre.keyControl(mainWindow.getsKeys(), deltaTime);
-//		camaraLibre.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-//		currentCamera = &camaraLibre;
-//		break;
-//	}
-//}
-
-
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -1525,7 +1476,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 2.0f, 0.5f);
+	camera = Camera(glm::vec3(100.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 90.0f, 2.5f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -1671,7 +1622,7 @@ int main()
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
-		setCamera(mainWindow.getTipoCamara());
+		//setCamera(mainWindow.getTipoCamara());
 
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
