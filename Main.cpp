@@ -38,7 +38,7 @@
 const float toRadians = 3.14159265f / 180.0f;
 
 int n = 1; // Para controlar el tiempo de día y noche
-int day = 30;
+int day = 10;
 int burgir = 3;
 float angle = 0.0f; // Para generar el glich
 float ang = 0.0f; // Para el cangremovil
@@ -50,9 +50,9 @@ float movOffsetburgir = 0.095f;
 float angArmBob = 0.0f;
 float angleHead = 0.0f; // Para la cabeza de Overgrownd
 float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
-float movbiciOffset = 0.2f, rotllantaB = 0.0f; 
+float movbiciOffset = 0.7f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
-float movOffSetC = 0.07f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
+float movOffSetC = 0.5f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
 float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
 float movnubeoffset, movnubeYoffset; 
 bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
@@ -111,6 +111,7 @@ DirectionalLight mainLight, mainLightNigth;
 PointLight pointLights[MAX_POINT_LIGHTS];
 PointLight pointLights2[MAX_POINT_LIGHTS];
 PointLight pointLights3[MAX_POINT_LIGHTS];
+PointLight pointLights4[MAX_POINT_LIGHTS];
 
 //Declaración de luces de tipo spotlight
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -668,10 +669,10 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (dig) {
-		model = glm::rotate(model, glm::radians(-57.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(213.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 	else if (ret) {
-		model = glm::rotate(model, glm::radians(-33.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	}
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	bici = model;
@@ -1562,15 +1563,20 @@ int main()
 		0.01f, 0.2f, 0.01f);
 	pointLightCount3++;
 
+	unsigned int pointLightCount4 = 3;
+	pointLights4[0] = pointLights[0];
+	pointLights4[1] = pointLights2[0];
+	pointLights4[2] = pointLights3[0];
+
 	//-------Spot Ligth---------
 
 	unsigned int spotLightCount = 0;
 	//linterna
-	spotLights[0] = SpotLight(0.0f, 0.0f, 0.0f,
-		0.0f, 2.0f,
+	spotLights[0] = SpotLight(0.0f, 0.4f, 0.0f,
+		1.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.14f, 0.07f,
 		5.0f);
 	spotLightCount++;
 
@@ -1587,15 +1593,6 @@ int main()
 		1.0f, 2.0f,
 		-10.0f, 9.0f, 60.0f,
 		0.0f, 1.5f, -5.0f,
-		1.5f, 0.0f, 0.0f,
-		20.0f);
-	spotLightCount++;
-
-	//Spotlight leon
-	spotLights[3] = SpotLight(1.0f, 1.0f, 0.5f,
-		1.0f, 2.0f,
-		-10.0f, 9.0f, -20.0f,
-		0.0f, 1.5f, 5.0f,
 		1.5f, 0.0f, 0.0f,
 		20.0f);
 	spotLightCount++;
@@ -1689,11 +1686,10 @@ int main()
 			}
 		}
 
-		printf("x: %f z: %f ", movbicix, movbiciz);
+		
 
 		if ( (movbicix > 41 && movbicix < 261) && (movbiciz < 76 && movbiciz > -261)) {
 			if (avanza) { // Para mover la bici
-				printf(" anvanza \n");
 				if (movbiciz < 75) {
 					movbiciz += movbiciOffset * deltaTime;
 					rotllantaB += 7.0f;
@@ -1703,7 +1699,6 @@ int main()
 				}
 			}
 			else if (dig) {
-				printf(" dig \n");
 				if (movbiciz > -250) {
 					movbicix = (movbiciz + 330.11) / 1.558;
 					movbiciz -= movbiciOffset * deltaTime;
@@ -1714,13 +1709,13 @@ int main()
 				}
 			}
 			else if (ret) {
-				printf(" ret \n");
 				if (movbicix < 259) {
 					movbicix += movbiciOffset * deltaTime;
 					rotllantaB += 7.0f;
 				}
 				else {
-					ret = !ret;
+					avanza = !avanza;
+					dig = !dig;
 				}
 			}
 		}
@@ -1729,6 +1724,8 @@ int main()
 			movbiciz = -259;
 		}
 
+		printf("x: %f z: %f cangre: %f \n",movbicix, movbiciz, movcangre);
+
 		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
 			movcangre += movOffSetC * deltaTime;
 			rotllantaC += rotllantaOffSetC * deltaTime;
@@ -1736,6 +1733,9 @@ int main()
 		else if (movcangre >= 94 && movcangre < 160){
 			movcangre += movOffsetC2 * deltaTime;
 			ang += 5.0f;
+		}
+		else {
+			movcangre = -250.0f;
 		}
 
 		if (movnubeYoffset > 360.0f) {
@@ -1771,26 +1771,30 @@ int main()
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		// luz ligada a la cámara de tipo flash
-		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
-		glm::vec3 lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+	
+		// Luz spotligth que esta ligada a la bicicleta	
+
+		if (avanza) {
+			spotLights[0].SetFlash(glm::vec3(movbicix, 4.0f, movbiciz + 5.0f), glm::vec3(0.0f, -1.0f, 1.0f));
+		}
+		else if (dig) {
+			spotLights[0].SetFlash(glm::vec3(movbicix - 5.0f, 4.0f, movbiciz - 5.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
+		}
+		else if (ret) {
+			spotLights[0].SetFlash(glm::vec3(movbicix + 5.0f, 4.0f, movbiciz), glm::vec3(1.0f, -1.0f, 0.0f));
+		}
 		
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-		//shaderList[0].SetPointLights(pointLights, pointLightCount);
-		//información al shader de fuentes de iluminación
 
 		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
+			shaderList[0].SetSpotLights(spotLights, spotLightCount-3);
 		}
 		else if (now >= day * (n + 1) && now <= day * (n + 2)) {
 			shaderList[0].SetDirectionalLight(&mainLightNigth);
+			shaderList[0].SetSpotLights(spotLights, spotLightCount);
 		}
 
 		//PointLights
-		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		if (mainWindow.getLuces() == 0.0) {
 			shaderList[0].SetPointLights(pointLights, pointLightCount);
@@ -1801,10 +1805,13 @@ int main()
 		else if (mainWindow.getLuces() == 2.0) {
 			shaderList[0].SetPointLights(pointLights3, pointLightCount3);
 		}
+		else if(mainWindow.getLuces() == 3.0){
+			shaderList[0].SetPointLights(pointLights4, pointLightCount4);
+		}
+		else if (mainWindow.getLuces() == 4.0) {
+			shaderList[0].SetPointLights(pointLights4, pointLightCount4-3);
+		}
 		
-
-		//SpotLigth 
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
     
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
