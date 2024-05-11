@@ -58,6 +58,8 @@ float movnubeoffset, movnubeYoffset;
 bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
 bool avanza = true, dig = true, ret = true; // Para el recorrido de la bici
 
+float toffsetbanneru = 0.0f;
+
 Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
@@ -70,6 +72,7 @@ Camera camera;
 Camera camaraAvatar, camaraAerea, camaraLibre, currentCamera;
 
 Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
+Texture GateBannerTexture;
 
 // Edificios
 Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
@@ -91,6 +94,8 @@ Model mesa, cangre;
 
 // Puertas
 Model LionGate;
+Model Porton;
+Model PuertaMetal;
 
 Skybox skybox, skyboxNigth;
 
@@ -202,6 +207,19 @@ void CreateObjects()
 
 	};
 
+	unsigned int letreroIndices[] = {
+	   0, 1, 2,
+	   0, 2, 3,
+	};
+
+	GLfloat letreroVertices[] = {
+		-0.5f, 0.0f, 0.5f,		0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		0.5f, 0.0f, 0.5f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		0.5f, 0.0f, -0.5f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		-0.5f, 0.0f, -0.5f,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+
+	};
+
 	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
@@ -218,13 +236,17 @@ void CreateObjects()
 	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
 	meshList.push_back(obj4);
 
+	Mesh* obj5 = new Mesh();
+	obj5->CreateMesh(letreroVertices, letreroIndices, 32, 6);
+	meshList.push_back(obj5);
+
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
 	calcAverageNormals(vegetacionIndices, 12, vegetacionVertices, 64, 8, 5);
 
 }
 
-//meshList[4]
+//meshList[5]
 void CreateCubeMesh()
 {
 
@@ -423,6 +445,11 @@ void LoadModels() {
 	// Puertas
 	LionGate = Model();
 	LionGate.LoadModel("Models/Puertas/gate.obj");
+	Porton = Model();
+	Porton.LoadModel("Models/Puertas/porton.obj");
+	PuertaMetal = Model();
+	PuertaMetal.LoadModel("Models/Puertas/PuertaMetalica.obj");
+
 }
 
 void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
@@ -431,13 +458,13 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 			// Capsule Corp
 	// *********************************************************************
-	/*
-	model = glm::translate(model, glm::vec3(-200.0f, 0.0f, -150.0f));
-	// Por ahora se usa esto, lo mejor seria escalar el modelo directo en 3DSMax
-	model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+	
+	model = glm::translate(model, glm::vec3(-230.0f, 1.0f, 200.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Capsule.RenderModel();
-	*/
+	
 	// *********************************************************************
 			// Casa Bob Esponja
 	// *********************************************************************
@@ -869,7 +896,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::translate(model, glm::vec3(-180.0f, 0.4f, -30.0f));
 	model = glm::scale(model, glm::vec3(10.0f, 3.0f, 10.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Piedra5.RenderModel();
+	Piedra5.RenderModel();
 
 	// *********************************************************************
 		// Patito
@@ -887,11 +914,11 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(0.0f, 5.0f, 10.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 6.0f, 10.0f));
 	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Kunai.RenderModel();
+	Kunai.RenderModel();
 
 	// *********************************************************************
 		// Pato
@@ -913,7 +940,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Shuriken.RenderModel();
+	Shuriken.RenderModel();
 
 	// *********************************************************************
 		// Bamboo
@@ -1291,13 +1318,13 @@ void buildWall(int size, glm::vec3 dir, glm::mat4* model, GLuint uniformModel, G
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		(*texture).UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[4]->RenderMesh();
+		meshList[5]->RenderMesh();
 		*model = glm::translate(*model, dir);
 	}
 }
 
 void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* brickTexture,
-	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
+	GLuint uniformSpecularIntensity, GLuint uniformShininess, GLuint uniformTextureOffset, glm::vec2 toffset) {
 
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::mat4 wallModelAux(1.0);
@@ -1316,7 +1343,16 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(2.0f, 10.0f, 20.0f));
 	model = glm::translate(model, glm::vec3(140.0f, 0.0f, -0.5f));
-	buildWall(28, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+	buildWall(22, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	//Porton
+	model = glm::scale(model, glm::vec3(0.5f, 0.2f, 0.2f));
+	model = glm::translate(model, glm::vec3(0.0f, -1.7f, 120.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Porton.RenderModel();
 
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(2.0f, 10.0f, 20.0f));
@@ -1326,7 +1362,15 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(20.0f, 10.0f, 2.0f));
 	model = glm::translate(model, glm::vec3(-13.5f, 0.0f, -280.0f));
-	buildWall(28, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f));
+	buildWall(17, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	//Puerta Metal
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 2.0f));
+	model = glm::translate(model, glm::vec3(-97.5f, -2.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	PuertaMetal.RenderModel();
 
 	// Puerta Principal
 	model = wallModelAux;
@@ -1334,6 +1378,23 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::translate(model, glm::vec3(-314.0f, -9.0f, 2.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LionGate.RenderModel();
+
+	toffsetbanneru += 0.005;
+	if (toffsetbanneru > 1.0)
+		toffsetbanneru = 0.0;
+
+	toffset = glm::vec2(toffsetbanneru, 0.0f);
+	model = wallModelAux;
+	model = glm::translate(model, glm::vec3(-110.0f, 15.5f, 1.5f));
+	model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(15.0f, 7.0f,4.5f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	GateBannerTexture.UseTexture();
+	Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+	meshList[4]->RenderMesh();
 }
 
 void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, std::vector<Texture*> wallTextures,
@@ -1496,6 +1557,9 @@ int main()
 	rockWallTexture.LoadTextureA();
 	wallTextures.push_back(&rockWallTexture);
 
+	GateBannerTexture = Texture("Textures/banner.png");
+	GateBannerTexture.LoadTextureA();
+
 	LoadModels();
 
 	std::vector<std::string> skyboxFaces;
@@ -1600,7 +1664,7 @@ int main()
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0;
+		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
@@ -1614,6 +1678,8 @@ int main()
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 
 		angle += 0.1f;
 
@@ -1760,6 +1826,7 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
+		uniformTextureOffset = shaderList[0].getOffsetLocation();
 
 		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
@@ -1782,6 +1849,9 @@ int main()
 			spotLights[0].SetFlash(glm::vec3(movbicix + 5.0f, 4.0f, movbiciz), glm::vec3(1.0f, -1.0f, 0.0f));
 		}
 		
+		shaderList[0].SetSpotLights(spotLights, spotLightCount);
+		shaderList[0].SetPointLights(pointLights, pointLightCount);
+		//información al shader de fuentes de iluminación
 
 		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
@@ -1819,6 +1889,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 	
@@ -1837,7 +1908,7 @@ int main()
 		//*****************************************************************
 				// CARGA LOS EDIFICIOS
 		//*****************************************************************
-
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		RenderEdificios(model, modelaux, uniformModel);
 
 		//*****************************************************************
@@ -1861,7 +1932,7 @@ int main()
 				// CARGA PAREDES EXTERNAS DE ESCENA
 		//*****************************************************************
 
-		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess, uniformTextureOffset, toffset);
 
 		//*****************************************************************
 				// CARGA MUROS INTERNOS
