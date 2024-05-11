@@ -106,14 +106,18 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 	
-	if (key == 76) {
-		if (theWindow->lanzar == 0.0f) {
-			theWindow->lanzar = 1.0f;
-
+	// Luces Pointligth
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS)
+		{
+			theWindow->luz = 0.0f;
 		}
-		else {
-			theWindow->lanzar = 0.0f;
-		}	
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 1.0f;
+	}
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 2.0f;
 	}
 
 	if (key >= 0 && key < 1024)
