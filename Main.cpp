@@ -359,6 +359,8 @@ void LoadModels() {
 	// Edificios
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
+	CapsuleCorp = Model();
+	CapsuleCorp.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
 	Flores = Model();
@@ -498,11 +500,11 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Capsule.RenderModel();
+	CapsuleCorp.RenderModel();
 	
 	// *********************************************************************
 			// Casa Bob Esponja
-	// *********************************************************************
+	// *********************************************************************G
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-250.0f, 0.0f, 0.0f));
@@ -666,8 +668,6 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Overgrown.RenderModel();
 
 
 	if (now >= day * n && now < day * (n + 1)) { // DIA
@@ -809,14 +809,14 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	//Trayecto nube
 
 	if (nubeState == 0) {
-		if (movnubeX < -100) {
+		if (movnubeX < -50) {
 			//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			nubeState = 1;
 		}
 		movnubeX -= movnubeoffset * deltaTime;
 	}
 	else if (nubeState == 1) {
-		if (movnubeZ < -100) {
+		if (movnubeZ < -50) {
 			nubeState = 2;
 			//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		}
@@ -824,7 +824,7 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 		movnubeZ -= movnubeoffset * deltaTime;
 	}
 	else if (nubeState == 2) {
-		if (movnubeZ > 100) {
+		if (movnubeZ > 50) {
 			//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			nubeState = 2;
 		}
