@@ -15,6 +15,8 @@ Window::Window(GLint windowWidth, GLint windowHeight)
 	height = windowHeight;
 	muevex = 2.0f;
 	lanzar = 0.0f;
+	cameraSwitch = false;
+	camera = true;
 	for (size_t i = 0; i < 1024; i++)
 	{
 		keys[i] = 0;
@@ -127,7 +129,31 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
 	{
 		theWindow->luz = 2.0f;
-  }
+	}
+	if (key == GLFW_KEY_4 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 3.0f;
+	}
+	if (key == GLFW_KEY_5 && action == GLFW_PRESS)
+	{
+		theWindow->luz = 4.0f;
+	}
+
+	//Banderas Caminar
+	if ((key == GLFW_KEY_W || key == GLFW_KEY_S || 
+		key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS)
+	{
+		theWindow->walkflag = 1;
+	}
+	else if((key == GLFW_KEY_W || key == GLFW_KEY_S ||
+		key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_RELEASE){
+		theWindow->walkflag = 0;
+	}
+
+	//Cambio de camara
+	if (key == GLFW_KEY_C && action == GLFW_RELEASE) {
+		theWindow->cameraSwitch = true;
+	}
 
 	if (key >= 0 && key < 1024)
 	{

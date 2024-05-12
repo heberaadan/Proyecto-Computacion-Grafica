@@ -34,6 +34,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+
 const float toRadians = 3.14159265f / 180.0f;
 
 int n = 1; // Para controlar el tiempo de día y noche
@@ -49,12 +50,34 @@ float movOffsetburgir = 0.095f;
 float angArmBob = 0.0f;
 float angleHead = 0.0f; // Para la cabeza de Overgrownd
 float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
-float movbiciOffset = 0.095f, rotllantaB = 0.0f; 
+float movbiciOffset = 0.7f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
-float movOffSetC = 0.07f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
+float movOffSetC = 0.5f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
 float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
 float movnubeoffset, movnubeYoffset; 
-bool avanza = true, saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
+bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
+bool avanza = true, dig = true, ret = true; // Para el recorrido de la bici
+
+// Extremidades Saitama
+float WALK_ANIM_SPEED = 5.0;
+float leftrot = 0.0f;
+float rightrot = 0.0f;
+float leftinc = WALK_ANIM_SPEED;
+float rightinc = -WALK_ANIM_SPEED;
+
+//Animacion letrero
+float toffsetbanneru = 0.0f;
+
+//Camaras
+float camaraPx = -120.0f;
+float camaraPy = 30.0f;
+float camaraPz = 330.0f;
+
+float camaraAx = 0.0f;
+float camaraAy = 150.0f;
+float camaraAz = 0.0f;
+
+bool cameraState = true;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -62,9 +85,15 @@ std::vector<Shader> shaderList;
 
 std::vector<Texture*> wallTextures;
 
+//Saitama pelon;
+
 Camera camera;
+Camera camaraAvatar, camaraAerea;
+
+Model SaitamaBody, SaitamaLeftL, SaitamaRightL, SaitamaLeftA, SaitamaRightA;
 
 Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
+Texture GateBannerTexture;
 
 // Edificios
 Model KameHouse, CapsuleCorp, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
@@ -86,6 +115,8 @@ Model mesa, cangre;
 
 // Puertas
 Model LionGate;
+Model Porton;
+Model PuertaMetal;
 
 Skybox skybox, skyboxNigth;
 
@@ -106,6 +137,7 @@ DirectionalLight mainLight, mainLightNigth;
 PointLight pointLights[MAX_POINT_LIGHTS];
 PointLight pointLights2[MAX_POINT_LIGHTS];
 PointLight pointLights3[MAX_POINT_LIGHTS];
+PointLight pointLights4[MAX_POINT_LIGHTS];
 
 //Declaración de luces de tipo spotlight
 SpotLight spotLights[MAX_SPOT_LIGHTS];
@@ -196,6 +228,19 @@ void CreateObjects()
 
 	};
 
+	unsigned int letreroIndices[] = {
+	   0, 1, 2,
+	   0, 2, 3,
+	};
+
+	GLfloat letreroVertices[] = {
+		-0.5f, 0.0f, 0.5f,		0.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		0.5f, 0.0f, 0.5f,		1.0f, 0.0f,		0.0f, -1.0f, 0.0f,
+		0.5f, 0.0f, -0.5f,		1.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+		-0.5f, 0.0f, -0.5f,		0.0f, 1.0f,		0.0f, -1.0f, 0.0f,
+
+	};
+
 	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
@@ -212,13 +257,17 @@ void CreateObjects()
 	obj4->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
 	meshList.push_back(obj4);
 
+	Mesh* obj5 = new Mesh();
+	obj5->CreateMesh(letreroVertices, letreroIndices, 32, 6);
+	meshList.push_back(obj5);
+
 	calcAverageNormals(indices, 12, vertices, 32, 8, 5);
 
 	calcAverageNormals(vegetacionIndices, 12, vegetacionVertices, 64, 8, 5);
 
 }
 
-//meshList[4]
+//meshList[5]
 void CreateCubeMesh()
 {
 
@@ -343,6 +392,18 @@ void LoadModels() {
 	HeadOver = Model();
 	HeadOver.LoadModel("Models/OnePunchMan/Overgrown/Cabeza.obj");
 
+	//Saitama
+	SaitamaBody = Model();
+	SaitamaBody.LoadModel("Models/OnePunchMan/Saitama/saitamabody.obj");
+	SaitamaLeftL = Model();
+	SaitamaLeftL.LoadModel("Models/OnePunchMan/Saitama/saitamapiernaizq.obj");
+	SaitamaRightL = Model();
+	SaitamaRightL.LoadModel("Models/OnePunchMan/Saitama/saitamapiernader.obj");
+	SaitamaLeftA = Model();
+	SaitamaLeftA.LoadModel("Models/OnePunchMan/Saitama/saitamabrazoizq.obj");
+	SaitamaRightA = Model();
+	SaitamaRightA.LoadModel("Models/OnePunchMan/Saitama/saitamabrazoder.obj");
+
 	// Vehículos
 	Cangremovil = Model();
 	Cangremovil.LoadModel("Models/BobEsponja/Cangremovil/Cangremovil.obj");
@@ -417,12 +478,25 @@ void LoadModels() {
 	// Puertas
 	LionGate = Model();
 	LionGate.LoadModel("Models/Puertas/gate.obj");
+	Porton = Model();
+	Porton.LoadModel("Models/Puertas/porton.obj");
+	PuertaMetal = Model();
+	PuertaMetal.LoadModel("Models/Puertas/PuertaMetalica.obj");
+
 }
 
 void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 
 	glm::mat4 casa(1.0);
+	// *********************************************************************
+			// Capsule Corp
+	// *********************************************************************
 	
+	model = glm::translate(model, glm::vec3(-230.0f, 1.0f, 200.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(7.0f, 7.0f, 7.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Capsule.RenderModel();
 	
 	// *********************************************************************
 			// Casa Bob Esponja
@@ -483,17 +557,6 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
 
 	float x, y, z;
-  
-  // *********************************************************************
-			// Saitama
-	// *********************************************************************
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(250.0f, 0.0f, 200.0f));
-	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Saitama.RenderModel();
 
 	// *********************************************************************
 			// Tutsumaki
@@ -602,7 +665,8 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	//Overgrown.RenderModel();
+	Overgrown.RenderModel();
+
 
 	if (now >= day * n && now < day * (n + 1)) { // DIA
 		model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
@@ -654,9 +718,17 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 		// Bicicleta 
 	// *********************************************************************
 	glm::mat4 bici(1.0);
-
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(260, 0.0f, movbiciz));
+	model = glm::translate(model, glm::vec3(movbicix, 0.0f, movbiciz));
+	if (avanza) {
+		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (dig) {
+		model = glm::rotate(model, glm::radians(213.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+	else if (ret) {
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	bici = model;
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -931,12 +1003,12 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra5.RenderModel();
 
-	//Saitama
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(155.0f, 0.4f, 230.0f));
 	model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra5.RenderModel();
+
 
 	// *********************************************************************
 		// Patito
@@ -1694,13 +1766,13 @@ void buildWall(int size, glm::vec3 dir, glm::mat4* model, GLuint uniformModel, G
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 		(*texture).UseTexture();
 		Material_opaco.UseMaterial(uniformSpecularIntensity, uniformShininess);
-		meshList[4]->RenderMesh();
+		meshList[5]->RenderMesh();
 		*model = glm::translate(*model, dir);
 	}
 }
 
 void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, Texture* brickTexture,
-	GLuint uniformSpecularIntensity, GLuint uniformShininess) {
+	GLuint uniformSpecularIntensity, GLuint uniformShininess, GLuint uniformTextureOffset, glm::vec2 toffset) {
 
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::mat4 wallModelAux(1.0);
@@ -1719,7 +1791,16 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(2.0f, 10.0f, 20.0f));
 	model = glm::translate(model, glm::vec3(140.0f, 0.0f, -0.5f));
-	buildWall(28, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(3, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+	buildWall(22, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	//Porton
+	model = glm::scale(model, glm::vec3(0.5f, 0.2f, 0.2f));
+	model = glm::translate(model, glm::vec3(0.0f, -1.7f, 120.0f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Porton.RenderModel();
 
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(2.0f, 10.0f, 20.0f));
@@ -1729,7 +1810,15 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = wallModelAux;
 	model = glm::scale(model, glm::vec3(20.0f, 10.0f, 2.0f));
 	model = glm::translate(model, glm::vec3(-13.5f, 0.0f, -280.0f));
-	buildWall(28, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f));
+	buildWall(17, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+
+	//Puerta Metal
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 2.0f));
+	model = glm::translate(model, glm::vec3(-97.5f, -2.0f, 0.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	PuertaMetal.RenderModel();
 
 	// Puerta Principal
 	model = wallModelAux;
@@ -1737,6 +1826,23 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::translate(model, glm::vec3(-314.0f, -9.0f, 2.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LionGate.RenderModel();
+
+	toffsetbanneru += 0.005;
+	if (toffsetbanneru > 1.0)
+		toffsetbanneru = 0.0;
+
+	toffset = glm::vec2(toffsetbanneru, 0.0f);
+	model = wallModelAux;
+	model = glm::translate(model, glm::vec3(-110.0f, 15.5f, 1.5f));
+	model = glm::rotate(model, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(15.0f, 7.0f,4.5f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glUniform3fv(uniformColor, 1, glm::value_ptr(color));
+	GateBannerTexture.UseTexture();
+	Material_brillante.UseMaterial(uniformSpecularIntensity, uniformShininess);
+	meshList[4]->RenderMesh();
 }
 
 void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor, std::vector<Texture*> wallTextures,
@@ -1871,6 +1977,71 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	SpotlightModel.RenderModel();
 }
 
+void RenderSaitama(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLuint uniformTextureOffset, glm::vec2 toffset) {
+
+
+	if (mainWindow.getWalkFlag() == 1) {
+		if (leftrot > 45.0) {
+			leftinc = -WALK_ANIM_SPEED;
+		}
+		else if(leftrot < -45){
+			leftinc = WALK_ANIM_SPEED;
+		}
+
+		if (rightrot > 45.0) {
+			rightinc = -WALK_ANIM_SPEED;
+		}
+		else if (rightrot < -45) {
+			rightinc = WALK_ANIM_SPEED;
+		}
+
+		leftrot += leftinc;
+		rightrot += rightinc;
+	}
+	else {
+		leftrot = 0.0f;
+		rightrot = 0.0f;
+	}
+
+
+	model = modelaux;
+	if (cameraState) {
+		model = glm::translate(model, glm::vec3(camera.getCameraPosition().x, camera.getCameraPosition().y - 20.0f, camera.getCameraPosition().z - 30.0f));
+	}
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	modelaux = model;
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaBody.RenderModel();
+
+	model = glm::translate(model, glm::vec3(1.0f, -1.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(leftrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaLeftL.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.5f, -1.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(rightrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaRightL.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(1.5f, 7.3f, -1.0f));
+	model = glm::rotate(model, glm::radians(rightrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaLeftA.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 7.3f, -1.0f));
+	model = glm::rotate(model, glm::radians(leftrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaRightA.RenderModel();
+}
 
 int main()
 {
@@ -1881,7 +2052,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(0.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 2.0f, 0.5f);
+	camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -1899,6 +2070,9 @@ int main()
 	rockWallTexture = Texture("Textures/rockwall.png");
 	rockWallTexture.LoadTextureA();
 	wallTextures.push_back(&rockWallTexture);
+
+	GateBannerTexture = Texture("Textures/banner.png");
+	GateBannerTexture.LoadTextureA();
 
 	LoadModels();
 
@@ -1967,15 +2141,20 @@ int main()
 		0.01f, 0.2f, 0.01f);
 	pointLightCount3++;
 
+	unsigned int pointLightCount4 = 3;
+	pointLights4[0] = pointLights[0];
+	pointLights4[1] = pointLights2[0];
+	pointLights4[2] = pointLights3[0];
+
 	//-------Spot Ligth---------
 
 	unsigned int spotLightCount = 0;
 	//linterna
-	spotLights[0] = SpotLight(0.0f, 0.0f, 0.0f,
-		0.0f, 2.0f,
+	spotLights[0] = SpotLight(0.0f, 0.4f, 0.0f,
+		1.0f, 2.0f,
 		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 0.0f,
-		1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 0.14f, 0.07f,
 		5.0f);
 	spotLightCount++;
 
@@ -1996,19 +2175,10 @@ int main()
 		20.0f);
 	spotLightCount++;
 
-	//Spotlight leon
-	spotLights[3] = SpotLight(1.0f, 1.0f, 0.5f,
-		1.0f, 2.0f,
-		-10.0f, 9.0f, -20.0f,
-		0.0f, 1.5f, 5.0f,
-		1.5f, 0.0f, 0.0f,
-		20.0f);
-	spotLightCount++;
-
 	//se crean mas luces puntuales y spotlight 
 
 	GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
-		uniformSpecularIntensity = 0, uniformShininess = 0;
+		uniformSpecularIntensity = 0, uniformShininess = 0, uniformTextureOffset = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
@@ -2018,23 +2188,49 @@ int main()
 
 	while (!mainWindow.getShouldClose())
 	{
+
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
+		glm::vec2 toffset = glm::vec2(0.0f, 0.0f);
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 
 		angle += 0.1f;
 
 		//Recibir eventos del usuario
 		glfwPollEvents();
+		//setCamera(mainWindow.getTipoCamara());
+
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		//Camara
+
+		if (mainWindow.getCameraSwitch()) {
+			if(cameraState) {
+				camaraPx = camera.getCameraPosition().x;
+				camaraPy = camera.getCameraPosition().y;
+				camaraPz = camera.getCameraPosition().z;
+
+				camera = Camera(glm::vec3(camaraAx, camaraAy, camaraAz), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 2.5f, 0.5f);
+				cameraState = !cameraState;
+			}
+			else {
+				camaraAx = camera.getCameraPosition().x;
+				camaraAy = camera.getCameraPosition().y;
+				camaraAz = camera.getCameraPosition().z;
+
+				camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
+				cameraState = !cameraState;
+			}
+			mainWindow.clearCameraSwitch();
+		}
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		printf("aire: %i angArm: %f movburgir: %f \n", !aire, angArmB, movburgir);
 		if (!aire) { // Para el movimiento del lanzamiento de la burgir
 			if (angArmB > -40) {
 				angArmB -= 0.5f;
@@ -2093,23 +2289,42 @@ int main()
 			}
 		}
 
-		if (avanza) {
-			if (movbiciz < 94) { // Para mover a la bici
-				movbiciz += movbiciOffset * deltaTime;
-				rotllantaB += 6.0f;
+		
+
+		if ( (movbicix > 41 && movbicix < 261) && (movbiciz < 77 && movbiciz > -261)) {
+			if (avanza) { // Para mover la bici
+				if (movbiciz < 75) {
+					movbiciz += movbiciOffset * deltaTime;
+					rotllantaB += 7.0f;
+				}
+				else {
+					avanza = !avanza;
+				}
 			}
-			else {
-				avanza = !avanza;
+			else if (dig) {
+				if (movbiciz > -250) {
+					movbicix = (movbiciz + 330.11) / 1.558;
+					movbiciz -= movbiciOffset * deltaTime;
+					rotllantaB += 7.0f;
+				}
+				else {
+					dig = !dig;
+				}
+			}
+			else if (ret) {
+				if (movbicix < 259) {
+					movbicix += movbiciOffset * deltaTime;
+					rotllantaB += 7.0f;
+				}
+				else {
+					avanza = !avanza;
+					dig = !dig;
+				}
 			}
 		}
 		else {
-			if (movbiciz > -260) {
-				movbiciz -= movbiciOffset * deltaTime;
-				rotllantaB -= 6.0f;
-			}
-			else {
-				avanza = !avanza;
-			}
+			movbicix = 255;
+			movbiciz = -259;
 		}
 
 		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
@@ -2119,6 +2334,9 @@ int main()
 		else if (movcangre >= 94 && movcangre < 160){
 			movcangre += movOffsetC2 * deltaTime;
 			ang += 5.0f;
+		}
+		else {
+			movcangre = -250.0f;
 		}
 
 		if (movnubeYoffset > 360.0f) {
@@ -2145,6 +2363,7 @@ int main()
 		uniformView = shaderList[0].GetViewLocation();
 		uniformEyePosition = shaderList[0].GetEyePositionLocation();
 		uniformColor = shaderList[0].getColorLocation();
+		uniformTextureOffset = shaderList[0].getOffsetLocation();
 
 		//información en el shader de intensidad especular y brillo
 		uniformSpecularIntensity = shaderList[0].GetSpecularIntensityLocation();
@@ -2153,27 +2372,33 @@ int main()
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+	
+		// Luz spotligth que esta ligada a la bicicleta	
 
-		// luz ligada a la cámara de tipo flash
-		//sirve para que en tiempo de ejecución (dentro del while) se cambien propiedades de la luz
-		glm::vec3 lowerLight = camera.getCameraPosition();
-		lowerLight.y -= 0.3f;
-		spotLights[0].SetFlash(lowerLight, camera.getCameraDirection());
+		if (avanza) {
+			spotLights[0].SetFlash(glm::vec3(movbicix, 4.0f, movbiciz + 5.0f), glm::vec3(0.0f, -1.0f, 1.0f));
+		}
+		else if (dig) {
+			spotLights[0].SetFlash(glm::vec3(movbicix - 5.0f, 4.0f, movbiciz - 5.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
+		}
+		else if (ret) {
+			spotLights[0].SetFlash(glm::vec3(movbicix + 5.0f, 4.0f, movbiciz), glm::vec3(1.0f, -1.0f, 0.0f));
+		}
 		
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-		//shaderList[0].SetPointLights(pointLights, pointLightCount);
+		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		//información al shader de fuentes de iluminación
 
 		if (now >= day * n && now < day * (n + 1)) {
 			shaderList[0].SetDirectionalLight(&mainLight);
+			shaderList[0].SetSpotLights(spotLights, spotLightCount-3);
 		}
 		else if (now >= day * (n + 1) && now <= day * (n + 2)) {
 			shaderList[0].SetDirectionalLight(&mainLightNigth);
+			shaderList[0].SetSpotLights(spotLights, spotLightCount);
 		}
 
 		//PointLights
-		shaderList[0].SetDirectionalLight(&mainLight);
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
 
 		if (mainWindow.getLuces() == 0.0) {
 			shaderList[0].SetPointLights(pointLights, pointLightCount);
@@ -2184,19 +2409,31 @@ int main()
 		else if (mainWindow.getLuces() == 2.0) {
 			shaderList[0].SetPointLights(pointLights3, pointLightCount3);
 		}
+		else if(mainWindow.getLuces() == 3.0){
+			shaderList[0].SetPointLights(pointLights4, pointLightCount4);
+		}
+		else if (mainWindow.getLuces() == 4.0) {
+			shaderList[0].SetPointLights(pointLights4, pointLightCount4-3);
+		}
 		
-
-		//SpotLigth 
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
     
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
+
+		// *********************************************************************
+			// Camara Saitama
+		// *********************************************************************
+		//++++++++++++++++++
+
+		RenderSaitama(model, modelaux, uniformModel, uniformTextureOffset, toffset);
+
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
 		modelaux = model;
 		model = glm::scale(model, glm::vec3(30.0f, 1.0f, 30.0f));
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform3fv(uniformColor, 1, glm::value_ptr(color));
 	
@@ -2215,7 +2452,7 @@ int main()
 		//*****************************************************************
 				// CARGA LOS EDIFICIOS
 		//*****************************************************************
-
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		RenderEdificios(model, modelaux, uniformModel);
 
 		//*****************************************************************
@@ -2239,12 +2476,12 @@ int main()
 				// CARGA PAREDES EXTERNAS DE ESCENA
 		//*****************************************************************
 
-		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess);
+		RenderOutsideWalls(model, uniformModel, uniformColor, &brickTexture, uniformSpecularIntensity, uniformShininess, uniformTextureOffset, toffset);
 
 		//*****************************************************************
 				// CARGA MUROS INTERNOS
 		//*****************************************************************
-
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		RenderInnerWalls(model, uniformModel, uniformColor, wallTextures, uniformSpecularIntensity, uniformShininess);
 		
 		//*****************************************************************
