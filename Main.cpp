@@ -96,7 +96,7 @@ Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
 Texture GateBannerTexture;
 
 // Edificios
-Model KameHouse, Capsule, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
+Model KameHouse, CapsuleCorp, CasaBob, CasaCalamardo, Flores, Piedra, CasaSaitama;
 
 // Personajes
 Model Roshi, Bob, Calamardo, Gary, Karin;
@@ -109,7 +109,7 @@ Model llantaC, llantaB;
 // Decoración 
 Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Leon;
 Model Pato, Shuriken, Bamboo, LamparaZoo_On, LampGar, Pasto1, Saitama, Tutsumaki;
-Model Planta1, Planta2, Planta3, Planta4, Planta5, Pasto;
+Model Planta1, Planta2, Planta3, Planta4, Planta5, Planta6, Pasto, Medusa;
 Model SpotlightModel, PlankStage;
 Model mesa, cangre;
 
@@ -357,8 +357,6 @@ void LoadModels() {
 	// Edificios
 	KameHouse = Model();
 	KameHouse.LoadModel("Models/DragonBall/KameHouse/kameHouse.obj");
-	Capsule = Model();
-	Capsule.LoadModel("Models/DragonBall/CapsuleCorp/CapsuleCorp.obj");
 	CasaBob = Model();
 	CasaBob.LoadModel("Models/BobEsponja/CasaBob/CasaBob.obj");
 	Flores = Model();
@@ -434,7 +432,7 @@ void LoadModels() {
 	LamparaZoo = Model();
 	LamparaZoo.LoadModel("Models/Decoracion/Decoracion/LamparaZoo.obj");
 	LamparaZoo_On = Model();
-	LamparaZoo_On.LoadModel("Models/Decoracion/lamp_on.obj");
+	LamparaZoo_On.LoadModel("Models/Decoracion/Decoracion/lamp_on.obj");
 	Kunai = Model();
 	Kunai.LoadModel("Models/Decoracion/Decoracion/Kunai.obj");
 	Leon = Model();
@@ -445,7 +443,17 @@ void LoadModels() {
 	Shuriken.LoadModel("Models/Decoracion/Decoracion/Shuriken.obj");
 	LampGar = Model();
 	LampGar.LoadModel("Models/Decoracion/Decoracion/LamparaZoo1.obj");
-	
+	mesa = Model();
+	mesa.LoadModel("Models/Decoracion/Decoracion/mesaKrusty.obj");
+	cangre = Model();
+	cangre.LoadModel("Models/Decoracion/Decoracion/burgir.obj");
+	SpotlightModel = Model();
+	SpotlightModel.LoadModel("Models/Decoracion/Decoracion/Spotlight.obj");
+	PlankStage = Model();
+	PlankStage.LoadModel("Models/Decoracion/Decoracion/PlankStage.obj");
+	Medusa = Model();
+	Medusa.LoadModel("Models/Decoracion/Animales/Medusa.obj");
+
 	// Vegetación
 	Bamboo = Model();
 	Bamboo.LoadModel("Models/Decoracion/Vegetacion/Bamboo.obj");
@@ -464,16 +472,8 @@ void LoadModels() {
 	Planta4.LoadModel("Models/Decoracion/Vegetacion/Planta4.obj");
 	Planta5 = Model();
 	Planta5.LoadModel("Models/Decoracion/Vegetacion/Planta5.obj");
-
-	SpotlightModel = Model();
-	SpotlightModel.LoadModel("Models/Decoracion/Decoracion/Spotlight.obj");
-	PlankStage = Model();
-	PlankStage.LoadModel("Models/Decoracion/Decoracion/PlankStage.obj");
-	mesa = Model();
-	mesa.LoadModel("Models/Decoracion/Decoracion/mesaKrusty.obj");
-	cangre = Model();
-	cangre.LoadModel("Models/Decoracion/Decoracion/burgir.obj");
-
+	Planta6 = Model();
+	Planta6.LoadModel("Models/Decoracion/Vegetacion/Planta6.obj");
 
 	// Puertas
 	LionGate = Model();
@@ -661,6 +661,12 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 
 	glm::mat4 Over(1.0);
 	model = modelaux;
+	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
+	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Overgrown.RenderModel();
+
 
 	if (now >= day * n && now < day * (n + 1)) { // DIA
 		model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
@@ -828,6 +834,13 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra1.RenderModel();
 
+	//
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(110.0f, 0.4f, -100.0f));
+	model = glm::scale(model, glm::vec3(10.5f, 15.5f, 10.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra1.RenderModel();
+
 	// *********************************************************************
 		// Roca 2
 	// *********************************************************************
@@ -848,6 +861,12 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-267.3f, 0.4f, -150.0f));
+	model = glm::scale(model, glm::vec3(7.0f, 5.0f, 7.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra2.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(127.3f, 0.4f, -110.0f));
 	model = glm::scale(model, glm::vec3(7.0f, 5.0f, 7.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra2.RenderModel();
@@ -876,6 +895,31 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra3.RenderModel();
 
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(145.0f, 0.4f, -40.0f));
+	model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra3.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(200.0f, 0.4f, 85.0f));
+	model = glm::scale(model, glm::vec3(5.5f, 3.5f, 5.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra3.RenderModel();
+
+	//Saitama
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(145.0f, 0.4f, 230.0f));
+	model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra3.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(145.0f, 0.4f, 250.0f));
+	model = glm::scale(model, glm::vec3(5.0f, 3.5f, 5.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra3.RenderModel();
+
 	// *********************************************************************
 		// Roca 4
 	// *********************************************************************
@@ -888,13 +932,46 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-250.0f, 0.4f, -170.0f));
-	model = glm::scale(model, glm::vec3(5.5f, 5.5f, 5.5f));
+	model = glm::scale(model, glm::vec3(6.5f, 6.5f, 6.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra4.RenderModel();
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(95.0f, 0.4f, -142.5f));
-	model = glm::scale(model, glm::vec3(5.5f, 5.5f, 5.5f));
+	model = glm::scale(model, glm::vec3(8.0f, 8.0f, 8.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra4.RenderModel();
+
+	//
+	model = modelaux;
+	model = glm::translate(model, glm::vec3 (30.0f, 0.4f, 80.5f));
+	model = glm::scale(model, glm::vec3(4.5f, 4.5f, 4.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra4.RenderModel();
+
+	//camino
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(160.0f, 0.4f, 80.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 4.5f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra4.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(160.0f, 0.4f, 50.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 4.5f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra4.RenderModel();
+
+	//Saitama
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(120.0f, 0.4f, 250.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 4.5f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra4.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(100.0f, 0.4f, 230.0f));
+	model = glm::scale(model, glm::vec3(4.0f, 4.5f, 4.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra4.RenderModel();
 
@@ -915,10 +992,23 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	Piedra5.RenderModel();
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-180.0f, 0.4f, -30.0f));
-	model = glm::scale(model, glm::vec3(10.0f, 3.0f, 10.0f));
+	model = glm::translate(model, glm::vec3(65.0f, 0.4f, 80.0f));
+	model = glm::scale(model, glm::vec3(8.0f, 5.0f, 8.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Piedra5.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(85.0f, 0.4f, 70.0f));
+	model = glm::scale(model, glm::vec3(8.0f, 5.0f, 8.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra5.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(155.0f, 0.4f, 230.0f));
+	model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Piedra5.RenderModel();
+
 
 	// *********************************************************************
 		// Patito
@@ -936,8 +1026,7 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(0.0f, 6.0f, 10.0f));
-	//model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-190.0f, 0.3f, 70.0f));
 	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Kunai.RenderModel();
@@ -1176,6 +1265,121 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Pasto.RenderModel();
 
+	// Vegetación 
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(55.0f, 0.0f, 60.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(90.0f, 0.0f, 80.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(45.0f, 0.0f, -50.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(95.0f, 0.0f, -185.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(195.0f, 0.0f, 75.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(220.0f, 0.0f, 95.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(195.0f, 0.0f, 80.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(185.0f, 0.0f, 60.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(170.0f, 0.0f, 3.5f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(180.0f, 0.0f, 50.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(135.0f, 0.0f, -70.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(125.0f, 0.0f, 60.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(95.0f, 0.0f, 70.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(95.0f, 0.0f, 6.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(85.0f, 0.0f, -140.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(80.0f, 0.0f, -160.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(80.0f, 0.0f, 60.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(55.0f, 0.0f, -160.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -175.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Pasto.RenderModel();
+
 	// *********************************************************************
 		// Pasto 1
 	// *********************************************************************
@@ -1197,15 +1401,8 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	//Casa Roshi 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-184.5f, 0.0f, -213.0f));
+	model = glm::translate(model, glm::vec3(-184.5f, 0.0f, -220.0f));
 	model = glm::rotate(model, glm::radians(90.f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(2.0f, 0.5f, 2.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Pasto1.RenderModel();
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(-193.5f, 0.0f, -245.0f));
-	model = glm::rotate(model, glm::radians(-90.f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 0.5f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Pasto1.RenderModel();
@@ -1216,8 +1413,44 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(255.0f, 0.0f, 90.0f));
-	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta1.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-200.0f, 0.0f, 75.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta1.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(55.0f, 0.0f, -90.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta1.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(55.0f, 0.0f, -155.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta1.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(80.0f, 0.0f, 45.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta1.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(120.0f, 0.0f, -80.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta1.RenderModel();
+
+	//Karin
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 85.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Planta1.RenderModel();
 
@@ -1227,11 +1460,33 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(35.0f, 0.0f, -265.0f));
-	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Planta2.RenderModel();
 
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(130.0f, 0.0f, 52.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 2.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta2.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(70.0f, 0.0f, -152.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta2.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(70.0f, 0.0f, -70.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta2.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, 50.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta2.RenderModel();
 	// *********************************************************************
 		// Planta 3
 	// *********************************************************************
@@ -1239,6 +1494,37 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(80.0f, 0.0f, -185.0f));
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta3.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(100.0f, 0.0f, 25.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta3.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(205.0f, 0.0f, 40.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta3.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(50.0f, 0.0f, 70.5f));
+	model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta3.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(130.0f, 0.0f, -45.5f));
+	model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta3.RenderModel();
+
+	// Saitama
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(110.0f, 0.0f, 230.5f));
+	model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Planta3.RenderModel();
 
@@ -1252,6 +1538,52 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Planta4.RenderModel();
 
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(95.0f, 0.0f, 52.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(157.0f, 0.0f, -30.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(45.0f, 0.0f, -195.0f));
+	model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
+	//Karin
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -55.0f));
+	model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
+	//Gary
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -90.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 2.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
+	//Bob
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-265.0f, 0.0f, 75.0f));
+	model = glm::scale(model, glm::vec3(3.5f, 3.5f, 3.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
+	//Saitama
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(130.0f, 0.0f, 250.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta4.RenderModel();
+
 	// *********************************************************************
 		// Planta 5
 	// *********************************************************************
@@ -1261,6 +1593,86 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Planta5.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(215.0f, 0.0f, 80.5f));
+	model = glm::scale(model, glm::vec3(2.5f, 2.5f, 2.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta5.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(150.0f, 0.0f, -35.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta5.RenderModel();
+
+	//Karin
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 95.0f));
+	model = glm::scale(model, glm::vec3(4.0f, 3.5f, 4.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta5.RenderModel();
+
+	//Gary
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -100.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta5.RenderModel();
+
+	// *********************************************************************
+		// Planta 6
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(195.0f, 0.0f, 50.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(55.0f, 0.0f, 4.5f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(155.0f, 0.0f, -80.0f));
+	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(230.0f, 0.0f, 70.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(130.0f, 0.0f, -55.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(130.0f, 0.0f, -55.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	//Gary
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -270.0f));
+	model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
+
+	//Saitama
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(150.0f, 0.0f, 230.5f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Planta6.RenderModel();
 
 	// *********************************************************************
 		// Luces
@@ -1283,8 +1695,6 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	LampGar.RenderModel();
-
-	//Bamboo.RenderModel();
 
 	// *********************************************************************
 		// Stage de Leon
@@ -1326,6 +1736,22 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		cangre.RenderModel();
 	}
+
+	// *********************************************************************
+		// Medusa
+	// *********************************************************************
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-40.0f, 20.0f, -155.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Medusa.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-50.0f, 10.0f, -175.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Medusa.RenderModel();
 }
 
 
