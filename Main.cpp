@@ -58,7 +58,26 @@ float movnubeoffset, movnubeYoffset;
 bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
 bool avanza = true, dig = true, ret = true; // Para el recorrido de la bici
 
+// Extremidades Saitama
+float WALK_ANIM_SPEED = 5.0;
+float leftrot = 0.0f;
+float rightrot = 0.0f;
+float leftinc = WALK_ANIM_SPEED;
+float rightinc = -WALK_ANIM_SPEED;
+
+//Animacion letrero
 float toffsetbanneru = 0.0f;
+
+//Camaras
+float camaraPx = -120.0f;
+float camaraPy = 30.0f;
+float camaraPz = 330.0f;
+
+float camaraAx = 0.0f;
+float camaraAy = 150.0f;
+float camaraAz = 0.0f;
+
+bool cameraState = true;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -69,7 +88,9 @@ std::vector<Texture*> wallTextures;
 //Saitama pelon;
 
 Camera camera;
-Camera camaraAvatar, camaraAerea, camaraLibre, currentCamera;
+Camera camaraAvatar, camaraAerea;
+
+Model SaitamaBody, SaitamaLeftL, SaitamaRightL, SaitamaLeftA, SaitamaRightA;
 
 Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
 Texture GateBannerTexture;
@@ -373,6 +394,18 @@ void LoadModels() {
 	HeadOver = Model();
 	HeadOver.LoadModel("Models/OnePunchMan/Overgrown/Cabeza.obj");
 
+	//Saitama
+	SaitamaBody = Model();
+	SaitamaBody.LoadModel("Models/OnePunchMan/Saitama/saitamabody.obj");
+	SaitamaLeftL = Model();
+	SaitamaLeftL.LoadModel("Models/OnePunchMan/Saitama/saitamapiernaizq.obj");
+	SaitamaRightL = Model();
+	SaitamaRightL.LoadModel("Models/OnePunchMan/Saitama/saitamapiernader.obj");
+	SaitamaLeftA = Model();
+	SaitamaLeftA.LoadModel("Models/OnePunchMan/Saitama/saitamabrazoizq.obj");
+	SaitamaRightA = Model();
+	SaitamaRightA.LoadModel("Models/OnePunchMan/Saitama/saitamabrazoder.obj");
+
 	// Vehículos
 	Cangremovil = Model();
 	Cangremovil.LoadModel("Models/BobEsponja/Cangremovil/Cangremovil.obj");
@@ -524,17 +557,6 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
 
 	float x, y, z;
-  
-  // *********************************************************************
-			// Saitama
-	// *********************************************************************
-
-	model = modelaux;
-	model = glm::translate(model, glm::vec3(250.0f, 0.0f, 200.0f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	Saitama.RenderModel();
 
 	// *********************************************************************
 			// Tutsumaki
@@ -1529,6 +1551,72 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	SpotlightModel.RenderModel();
 }
 
+void RenderSaitama(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLuint uniformTextureOffset, glm::vec2 toffset) {
+
+
+	if (mainWindow.getWalkFlag() == 1) {
+		if (leftrot > 45.0) {
+			leftinc = -WALK_ANIM_SPEED;
+		}
+		else if(leftrot < -45){
+			leftinc = WALK_ANIM_SPEED;
+		}
+
+		if (rightrot > 45.0) {
+			rightinc = -WALK_ANIM_SPEED;
+		}
+		else if (rightrot < -45) {
+			rightinc = WALK_ANIM_SPEED;
+		}
+
+		leftrot += leftinc;
+		rightrot += rightinc;
+	}
+	else {
+		leftrot = 0.0f;
+		rightrot = 0.0f;
+	}
+
+
+	model = modelaux;
+	if (cameraState) {
+		model = glm::translate(model, glm::vec3(camera.getCameraPosition().x, camera.getCameraPosition().y - 20.0f, camera.getCameraPosition().z - 30.0f));
+	}
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	modelaux = model;
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaBody.RenderModel();
+
+	model = glm::translate(model, glm::vec3(1.0f, -1.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(leftrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaLeftL.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.5f, -1.5f, 0.0f));
+	model = glm::rotate(model, glm::radians(rightrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaRightL.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(1.5f, 7.3f, -1.0f));
+	model = glm::rotate(model, glm::radians(rightrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaLeftA.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(0.0f, 7.3f, -1.0f));
+	model = glm::rotate(model, glm::radians(leftrot), glm::vec3(1.0f, 0.0f, 0.0f));
+	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SaitamaRightA.RenderModel();
+}
+
 int main()
 {
 	mainWindow = Window(1366, 768); // 1280, 1024 or 1024, 768
@@ -1538,7 +1626,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(100.0f, 20.0f, -290.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 90.0f, 2.5f, 0.5f);
+	camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -1674,6 +1762,7 @@ int main()
 
 	while (!mainWindow.getShouldClose())
 	{
+
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
@@ -1689,6 +1778,28 @@ int main()
 
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		//Camara
+
+		if (mainWindow.getCameraSwitch()) {
+			if(cameraState) {
+				camaraPx = camera.getCameraPosition().x;
+				camaraPy = camera.getCameraPosition().y;
+				camaraPz = camera.getCameraPosition().z;
+
+				camera = Camera(glm::vec3(camaraAx, camaraAy, camaraAz), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 2.5f, 0.5f);
+				cameraState = !cameraState;
+			}
+			else {
+				camaraAx = camera.getCameraPosition().x;
+				camaraAy = camera.getCameraPosition().y;
+				camaraAz = camera.getCameraPosition().z;
+
+				camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
+				cameraState = !cameraState;
+			}
+			mainWindow.clearCameraSwitch();
+		}
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1835,7 +1946,6 @@ int main()
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
-
 	
 		// Luz spotligth que esta ligada a la bicicleta	
 
@@ -1884,6 +1994,14 @@ int main()
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+
+		// *********************************************************************
+			// Camara Saitama
+		// *********************************************************************
+		//++++++++++++++++++
+
+		RenderSaitama(model, modelaux, uniformModel, uniformTextureOffset, toffset);
 
 		model = glm::mat4(1.0);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
@@ -1937,7 +2055,7 @@ int main()
 		//*****************************************************************
 				// CARGA MUROS INTERNOS
 		//*****************************************************************
-
+		glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 		RenderInnerWalls(model, uniformModel, uniformColor, wallTextures, uniformSpecularIntensity, uniformShininess);
 		
 		//*****************************************************************
