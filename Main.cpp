@@ -65,7 +65,19 @@ float rightrot = 0.0f;
 float leftinc = WALK_ANIM_SPEED;
 float rightinc = -WALK_ANIM_SPEED;
 
+//Animacion letrero
 float toffsetbanneru = 0.0f;
+
+//Camaras
+float camaraPx = -120.0f;
+float camaraPy = 30.0f;
+float camaraPz = 330.0f;
+
+float camaraAx = 0.0f;
+float camaraAy = 150.0f;
+float camaraAz = 0.0f;
+
+bool cameraState = true;
 
 Window mainWindow;
 std::vector<Mesh*> meshList;
@@ -76,7 +88,7 @@ std::vector<Texture*> wallTextures;
 //Saitama pelon;
 
 Camera camera;
-Camera camaraAvatar, camaraAerea, camaraLibre, currentCamera;
+Camera camaraAvatar, camaraAerea;
 
 Model SaitamaBody, SaitamaLeftL, SaitamaRightL, SaitamaLeftA, SaitamaRightA;
 
@@ -1567,8 +1579,11 @@ void RenderSaitama(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLu
 
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(camera.getCameraPosition().x, camera.getCameraPosition().y - 20.0f, camera.getCameraPosition().z + 30.0f));
-	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
+	if (cameraState) {
+		model = glm::translate(model, glm::vec3(camera.getCameraPosition().x, camera.getCameraPosition().y - 20.0f, camera.getCameraPosition().z - 30.0f));
+	}
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 	modelaux = model;
 	glUniform2fv(uniformTextureOffset, 1, glm::value_ptr(toffset));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
@@ -1611,7 +1626,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(-314.0f, -9.0f, 2.5f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, 0.0f, 2.5f, 0.5f);
+	camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -1747,6 +1762,7 @@ int main()
 
 	while (!mainWindow.getShouldClose())
 	{
+
 		GLfloat now = glfwGetTime();
 		deltaTime = now - lastTime;
 		deltaTime += (now - lastTime) / limitFPS;
@@ -1762,6 +1778,28 @@ int main()
 
 		camera.keyControl(mainWindow.getsKeys(), deltaTime);
 		camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
+
+		//Camara
+
+		if (mainWindow.getCameraSwitch()) {
+			if(cameraState) {
+				camaraPx = camera.getCameraPosition().x;
+				camaraPy = camera.getCameraPosition().y;
+				camaraPz = camera.getCameraPosition().z;
+
+				camera = Camera(glm::vec3(camaraAx, camaraAy, camaraAz), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 2.5f, 0.5f);
+				cameraState = !cameraState;
+			}
+			else {
+				camaraAx = camera.getCameraPosition().x;
+				camaraAy = camera.getCameraPosition().y;
+				camaraAz = camera.getCameraPosition().z;
+
+				camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
+				cameraState = !cameraState;
+			}
+			mainWindow.clearCameraSwitch();
+		}
 
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

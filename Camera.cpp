@@ -22,11 +22,13 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 
 	if (keys[GLFW_KEY_W])
 	{
+		front.y = 0.0f; //Limita camara a plano XZ;
 		position += front * velocity;
 	}
 
 	if (keys[GLFW_KEY_S])
 	{
+		front.y = 0.0f;//Limita camara a plano XZ;
 		position -= front * velocity;
 	}
 
