@@ -137,6 +137,17 @@ void Window::ManejaTeclado(GLFWwindow* window, int key, int code, int action, in
 		theWindow->luz = 4.0f;
 	}
 
+	//Banderas Caminar
+	if ((key == GLFW_KEY_W || key == GLFW_KEY_S || 
+		key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_PRESS)
+	{
+		theWindow->walkflag = 1;
+	}
+	else if ((key == GLFW_KEY_W || key == GLFW_KEY_S ||
+		key == GLFW_KEY_A || key == GLFW_KEY_D) && action == GLFW_RELEASE) {
+		theWindow->walkflag = 0;
+	}
+
 	if (key >= 0 && key < 1024)
 	{
 		if (action == GLFW_PRESS)
