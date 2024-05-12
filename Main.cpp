@@ -53,8 +53,10 @@ float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
 float movbiciOffset = 0.7f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
 float movOffSetC = 0.5f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
-float movnubeX = 0.0f, movnubeY = 0.0f; // Para mover a la nube voladora
+float movnubeX = 0.0f, movnubeY = 0.0f, movnubeZ = 0.0f; // Para mover a la nube voladora
+float angleNube = 0.0f;
 float movnubeoffset, movnubeYoffset; 
+int nubeState = 0;
 bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
 bool avanza = true, dig = true, ret = true; // Para el recorrido de la bici
 
@@ -92,7 +94,7 @@ Camera camaraAvatar, camaraAerea;
 
 Model SaitamaBody, SaitamaLeftL, SaitamaRightL, SaitamaLeftA, SaitamaRightA;
 
-Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture;
+Texture pisoTexture, brickTexture, pisoNigth, bushTexture, rockWallTexture, pathTexture;
 Texture GateBannerTexture;
 
 // Edificios
@@ -803,9 +805,36 @@ void RenderVehiculos(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(170.0f-movnubeX, 10.0*sin(glm::radians(movnubeY)*0.1f) + 70, -140.0f));
+
+	//Trayecto nube
+
+	if (nubeState == 0) {
+		if (movnubeX < -100) {
+			//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			nubeState = 1;
+		}
+		movnubeX -= movnubeoffset * deltaTime;
+	}
+	else if (nubeState == 1) {
+		if (movnubeZ < -100) {
+			nubeState = 2;
+			//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		}
+		movnubeX += movnubeoffset * deltaTime;
+		movnubeZ -= movnubeoffset * deltaTime;
+	}
+	else if (nubeState == 2) {
+		if (movnubeZ > 100) {
+			//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			nubeState = 2;
+		}
+		movnubeX += movnubeoffset * deltaTime;
+		movnubeZ += movnubeoffset * deltaTime;
+	}
+
+	model = glm::translate(model, glm::vec3(movnubeX, 10.0 * sin(glm::radians(movnubeY) * 0.1f) + 70, movnubeZ));
 	model = glm::rotate(model, glm::radians(225.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Nube.RenderModel();
 }
@@ -1812,11 +1841,11 @@ void RenderOutsideWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColo
 	model = glm::translate(model, glm::vec3(-13.5f, 0.0f, -280.0f));
 	buildWall(6, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 	model = glm::translate(model, glm::vec3(4.0f, 0.0f, 0.0f));
-	buildWall(17, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
+	buildWall(18, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, brickTexture, uniformSpecularIntensity, uniformShininess, color);
 
 	//Puerta Metal
 	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 2.0f));
-	model = glm::translate(model, glm::vec3(-97.5f, -2.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-102.5f, -2.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	PuertaMetal.RenderModel();
 
@@ -1901,6 +1930,14 @@ void RenderInnerWalls(glm::mat4 model, GLuint uniformModel, GLuint uniformColor,
 
 	model = glm::translate(model, glm::vec3(50.0f, 0.0f, -1.0f));
 	buildWall(23, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[1], uniformSpecularIntensity, uniformShininess, color);
+
+	//Camino de piedra
+	model = wallModelAux;
+	model = glm::scale(model, glm::vec3(40.0f, 0.2f, 40.0f));
+	model = glm::translate(model, glm::vec3(-3.0f, 0.0f, -1.5f));
+	buildWall(12, glm::vec3(0.0f, 0.0f, -1.0f), &model, uniformModel, uniformColor, wallTextures[3], uniformSpecularIntensity, uniformShininess, color);
+	model = glm::translate(model, glm::vec3(1.0f, 0.0f, 11.0f));
+	buildWall(9, glm::vec3(1.0f, 0.0f, 0.0f), &model, uniformModel, uniformColor, wallTextures[3], uniformSpecularIntensity, uniformShininess, color);
 
 }
 
@@ -2071,6 +2108,11 @@ int main()
 	rockWallTexture.LoadTextureA();
 	wallTextures.push_back(&rockWallTexture);
 
+	pathTexture = Texture("Textures/stonepath.png");
+	pathTexture.LoadTextureA();
+	wallTextures.push_back(&pathTexture);
+
+
 	GateBannerTexture = Texture("Textures/banner.png");
 	GateBannerTexture.LoadTextureA();
 
@@ -2183,7 +2225,7 @@ int main()
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 1000.0f);
 	////Loop mientras no se cierra la ventana
 
-	movnubeoffset = 0.05f;
+	movnubeoffset = 0.1f;
 	movnubeYoffset = 12.0f;
 
 	while (!mainWindow.getShouldClose())
@@ -2344,7 +2386,6 @@ int main()
 		}
 
 		movnubeY += movnubeYoffset;
-		movnubeX += movnubeoffset * deltaTime;
 
 		if (now >= day*(n + 2)) {
 			n = n + 2;
@@ -2379,10 +2420,10 @@ int main()
 			spotLights[0].SetFlash(glm::vec3(movbicix, 4.0f, movbiciz + 5.0f), glm::vec3(0.0f, -1.0f, 1.0f));
 		}
 		else if (dig) {
-			spotLights[0].SetFlash(glm::vec3(movbicix - 5.0f, 4.0f, movbiciz - 5.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
+			spotLights[0].SetFlash(glm::vec3(movbicix - 1.0f, 4.0f, movbiciz - 5.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
 		}
 		else if (ret) {
-			spotLights[0].SetFlash(glm::vec3(movbicix + 5.0f, 4.0f, movbiciz), glm::vec3(1.0f, -1.0f, 0.0f));
+			spotLights[0].SetFlash(glm::vec3(movbicix + 1.0f, 4.0f, movbiciz), glm::vec3(1.0f, -1.0f, 0.0f));
 		}
 		
 		shaderList[0].SetSpotLights(spotLights, spotLightCount);
