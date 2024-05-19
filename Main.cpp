@@ -35,6 +35,13 @@
 #include "SpotLight.h"
 #include "Material.h"
 
+// Para el audio 
+#include <irrklang.h>
+using namespace irrklang;
+
+
+
+
 const float toRadians = 3.14159265f / 180.0f;
 
 int n = 1; // Para controlar el tiempo de día y noche
@@ -2227,6 +2234,20 @@ int main()
 
 	movnubeoffset = 0.1f;
 	movnubeYoffset = 12.0f;
+
+	//------------------SONIDO-----------------------
+//Sonido ambiental
+//ISoundEngine* Ambiental = createIrrKlangDevice();
+//Ambiental->play2D("Sound/Ambiental.wav", true); 
+//Ambiental->setSoundVolume(0.2f);
+	ISoundEngine* Ambiental = createIrrKlangDevice();
+	Ambiental->play2D("Media/doomed.mp3", true);
+	Ambiental->setSoundVolume(0.2f);
+
+	////Pista de fondo
+	//ISoundEngine* Intro = createIrrKlangDevice();
+	//Intro->play2D("Sound/Dexter_Pista.wav", true); //cambiar a cancion en loop sin la voz
+	//Intro->setSoundVolume(0.15f);
 
 	while (!mainWindow.getShouldClose())
 	{
