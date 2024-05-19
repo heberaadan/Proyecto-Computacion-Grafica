@@ -39,6 +39,7 @@
 #include <irrklang.h>
 using namespace irrklang;
 
+#pragma comment(lib, "irrKlang.lib")
 
 
 
@@ -2236,10 +2237,10 @@ int main()
 	movnubeYoffset = 12.0f;
 
 	//------------------SONIDO-----------------------
-//Sonido ambiental
-//ISoundEngine* Ambiental = createIrrKlangDevice();
-//Ambiental->play2D("Sound/Ambiental.wav", true); 
-//Ambiental->setSoundVolume(0.2f);
+	//Sonido ambiental
+	//ISoundEngine* Ambiental = createIrrKlangDevice();
+	//Ambiental->play2D("Sound/Ambiental.wav", true); 
+	//Ambiental->setSoundVolume(0.2f);
 	ISoundEngine* Ambiental = createIrrKlangDevice();
 	Ambiental->play2D("Media/doomed.mp3", true);
 	Ambiental->setSoundVolume(0.2f);
