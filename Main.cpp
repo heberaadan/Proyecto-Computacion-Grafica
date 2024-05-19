@@ -668,12 +668,9 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 
 	glm::mat4 Over(1.0);
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
-	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
-
-
-	if (now >= day * n && now < day * (n + 1)) { // DIA
+	
+	if (now >= day * n && now < day * (n + 1)) { // DIA (Gary)
+		model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 		if (now >= (day * (n + 1) - 5) && day < day * (n + 1)) { // Genera un glich 10 seg antes de que sea de noche 
@@ -685,9 +682,11 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 		Gary.RenderModel();
 	}
-	else if (now >= day * (n + 1) && now <= day * (n + 2)) { // NOCHE
+	else if (now >= day * (n + 1) && now <= day * (n + 2)) { // NOCHE (Overgrown) 
+		model = glm::translate(model, glm::vec3(-50.0f, 10.0f, -170.0f));
 		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Over = model;
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 		if (now >= (day * (n + 2) - 5) && day < day * (n + 2)) {
 			x = rand() % 2;
 			y = rand() % 2;
