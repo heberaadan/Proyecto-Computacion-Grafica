@@ -53,12 +53,15 @@ float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
 float movbiciOffset = 0.7f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
 float movOffSetC = 0.5f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
+float movM1 = 20.0f,movM2 = 10.f, scaleM = 1.0f;
+float movOffSetM = 0.08f, scalOffSetC = 0.009f;
 float movnubeX = 0.0f, movnubeY = 0.0f, movnubeZ = 0.0f; // Para mover a la nube voladora
 float angleNube = 0.0f;
 float movnubeoffset, movnubeYoffset; 
 int nubeState = 0;
 bool saludo = true, mover = true, girar = true, aire = false, moverbrazo = true;
 bool avanza = true, dig = true, ret = true; // Para el recorrido de la bici
+bool up1 = true, up2 = true, crece = true;
 
 // Extremidades Saitama
 float WALK_ANIM_SPEED = 5.0;
@@ -665,13 +668,12 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 
 	glm::mat4 Over(1.0);
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-50.0f, 0.3f, -170.0f));
-	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.8f, 0.8f, 0.8f));
 
 
 	if (now >= day * n && now < day * (n + 1)) { // DIA
-		model = glm::translate(model, glm::vec3(-50.0f, 1.0f, -170.0f));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 		if (now >= (day * (n + 1) - 5) && day < day * (n + 1)) { // Genera un glich 10 seg antes de que sea de noche 
@@ -684,7 +686,6 @@ void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, 
 		Gary.RenderModel();
 	}
 	else if (now >= day * (n + 1) && now <= day * (n + 2)) { // NOCHE
-		model = glm::translate(model, glm::vec3(-50.0f, 9.0f, -170.0f));
 		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Over = model;
 		if (now >= (day * (n + 2) - 5) && day < day * (n + 2)) {
@@ -1771,14 +1772,14 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	// *********************************************************************
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-40.0f, 20.0f, -155.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-40.0f, movM1, -155.0f));
+	model = glm::scale(model, glm::vec3(scaleM, scaleM, scaleM));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Medusa.RenderModel();
 
 	model = modelaux;
-	model = glm::translate(model, glm::vec3(-50.0f, 10.0f, -175.0f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(-50.0f, movM2, -175.0f));
+	model = glm::scale(model, glm::vec3(scaleM, scaleM, scaleM));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Medusa.RenderModel();
 }
@@ -2272,6 +2273,71 @@ int main()
 		// Clear the window
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		//printf("mov1: %f mov2: %f \n", movM1, movM2);
+
+		if (movM1 > 87.0f || movM1 < 10.0f) {
+			movM1 = 22.0f;
+		}
+
+		if (movM2 > 77.0f || movM2 < 8.0f) {
+			movM2 = 12.0f;
+		}
+
+		if (up1) {
+			if (movM1 < 85.0f) {
+				movM1 += movOffSetM * deltaTime;
+			}
+			else {
+				up1 = !up1;
+			}
+		}
+		else {
+			if (movM1 > 20.f) {
+				movM1 -= movOffSetM * deltaTime;
+			}
+			else {
+				up1 = !up1;
+			}
+		}
+
+		if (up2) {
+			if (movM2 < 75.0f) {
+				movM2 += movOffSetM * deltaTime;
+			}
+			else {
+				up2 = !up2;
+			}
+		}
+		else {
+			if (movM2 > 10.f) {
+				movM2 -= movOffSetM * deltaTime;
+			}
+			else {
+				up2 = !up2;
+			}
+		}
+
+		if (scaleM > 1.3f || scaleM < 0.3f) {
+			scaleM = 1.0f;
+		}
+
+		if (crece) {
+			if (scaleM > 0.5f) {
+				scaleM -= scalOffSetC * deltaTime;
+			}
+			else {
+				crece = !crece;
+			}
+		}
+		else {
+			if (scaleM < 1.0f) {
+				scaleM += scalOffSetC * deltaTime;
+			}
+			else {
+				crece = !crece;
+			}
+		}
 
 		if (!aire) { // Para el movimiento del lanzamiento de la burgir
 			if (angArmB > -40) {
