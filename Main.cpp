@@ -81,15 +81,6 @@ float rightinc = -WALK_ANIM_SPEED;
 //Animacion letrero
 float toffsetbanneru = 0.0f;
 
-//Camaras
-float camaraPx = -120.0f;
-float camaraPy = 30.0f;
-float camaraPz = 330.0f;
-
-float camaraAx = 0.0f;
-float camaraAy = 150.0f;
-float camaraAz = 0.0f;
-
 bool cameraState = true;
 
 Window mainWindow;
@@ -101,7 +92,8 @@ std::vector<Texture*> wallTextures;
 //Saitama pelon;
 
 Camera camera;
-Camera camaraAvatar, camaraAerea;
+Camera camaraAvatar = Camera(glm::vec3(-120.0f, 30.0f, 330.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);;
+Camera camaraAerea = Camera(glm::vec3(0.0f, 150.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0, 2.5f, 0.5f);;
 
 Model SaitamaBody, SaitamaLeftL, SaitamaRightL, SaitamaLeftA, SaitamaRightA;
 
@@ -2097,7 +2089,7 @@ int main()
 	CreateShaders();
 	CreateCubeMesh();
 
-	camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
+	camera = camaraAvatar;
 
 	pisoTexture = Texture("Textures/Skybox/floor.tga");
 	pisoTexture.LoadTextureA();
@@ -2273,19 +2265,13 @@ int main()
 
 		if (mainWindow.getCameraSwitch()) {
 			if(cameraState) {
-				camaraPx = camera.getCameraPosition().x;
-				camaraPy = camera.getCameraPosition().y;
-				camaraPz = camera.getCameraPosition().z;
-
-				camera = Camera(glm::vec3(camaraAx, camaraAy, camaraAz), glm::vec3(0.0f, 1.0f, 0.0f), 0.0f, -90.0f, 2.5f, 0.5f);
+				camaraAvatar = camera;
+				camera = camaraAerea;
 				cameraState = !cameraState;
 			}
 			else {
-				camaraAx = camera.getCameraPosition().x;
-				camaraAy = camera.getCameraPosition().y;
-				camaraAz = camera.getCameraPosition().z;
-
-				camera = Camera(glm::vec3(camaraPx, camaraPy, camaraPz), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 2.5f, 0.5f);
+				camaraAerea = camera;
+				camera = camaraAvatar;
 				cameraState = !cameraState;
 			}
 			mainWindow.clearCameraSwitch();
