@@ -41,6 +41,12 @@ using namespace irrklang;
 
 #pragma comment(lib, "irrKlang.lib")
 
+// Audio
+ISoundEngine* Pos1;
+ISoundEngine* Pos2;
+
+ISound* Goku;
+ISound* Bang;
 
 
 const float toRadians = 3.14159265f / 180.0f;
@@ -2232,7 +2238,13 @@ int main()
 	
 	ISoundEngine* Ambiental = createIrrKlangDevice();
 	Ambiental->play2D("Media/ambiental.mp3", true);
-	Ambiental->setSoundVolume(0.2f);
+	Ambiental->setSoundVolume(0.35f);
+
+	Pos1 = createIrrKlangDevice();
+	Pos2 = createIrrKlangDevice();
+
+	Pos1->play2D("Media/DragonBallRap.mp3", true);
+	Pos2->play2D("media/OnePunchMan.mp3",true);
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -2267,6 +2279,53 @@ int main()
 				cameraState = !cameraState;
 			}
 			mainWindow.clearCameraSwitch();
+		}
+		
+		// Activa el audio posicional (GOKU)
+		printf("x: %f z: %f \n", camera.getCameraPosition().x, camera.getCameraPosition().z);
+		if ((camera.getCameraPosition().x <= -210.0f && camera.getCameraPosition().x >= -255.0f) && (camera.getCameraPosition().z >= -280.0f && camera.getCameraPosition().z <= -210.0f)) {
+			Ambiental->setSoundVolume(0.0f);
+			Pos1->setSoundVolume(0.45f);
+		}
+		else if ((camera.getCameraPosition().x <= -180.0f && camera.getCameraPosition().x >= -265.0f) && (camera.getCameraPosition().z >= -280.0f && camera.getCameraPosition().z <= -180.0f)) {
+			Ambiental->setSoundVolume(0.05f);
+			Pos1->setSoundVolume(0.35f);
+		}
+		else if ((camera.getCameraPosition().x <= -150.0f && camera.getCameraPosition().x >= -275.0f) && (camera.getCameraPosition().z >= -280.0f && camera.getCameraPosition().z <= -150.0f)) {
+			Ambiental->setSoundVolume(0.15f);
+			Pos1->setSoundVolume(0.25f);
+		}
+		else if ((camera.getCameraPosition().x <= -120.0f && camera.getCameraPosition().x >= -270.0f) && (camera.getCameraPosition().z >= -280.0f && camera.getCameraPosition().z <= -120.0f)) {
+			Ambiental->setSoundVolume(0.2f);
+			Pos1->setSoundVolume(0.15f);
+		}
+		else {
+			Pos1->setSoundVolume(0.0f);
+		}
+
+		// Activa el audio posicional (BANG)
+		if ((camera.getCameraPosition().x <= 100.0f && camera.getCameraPosition().x >= 5.0f) && (camera.getCameraPosition().z >= 180.0f && camera.getCameraPosition().z <= 280.0f)) {
+			printf("VOL 4 \n");
+			Ambiental->setSoundVolume(0.0f);
+			Pos2->setSoundVolume(0.45f);
+		}
+		else if ((camera.getCameraPosition().x <= 124.0f && camera.getCameraPosition().x >= -19.0f) && (camera.getCameraPosition().z >= 160.0f && camera.getCameraPosition().z <= 280.0f)) {
+			printf("VOL 3 \n");
+			Ambiental->setSoundVolume(0.05f);
+			Pos2->setSoundVolume(0.35f);
+		}
+		else if ((camera.getCameraPosition().x <= 148.0f && camera.getCameraPosition().x >= -43.0f) && (camera.getCameraPosition().z >= 140.0f && camera.getCameraPosition().z <= 280.0f)) {
+			printf("VOL 2 \n");
+			Ambiental->setSoundVolume(0.15f);
+			Pos2->setSoundVolume(0.25f);
+		}
+		else if ((camera.getCameraPosition().x <= 172.0f && camera.getCameraPosition().x >= -67.0f) && (camera.getCameraPosition().z >= 120.0f && camera.getCameraPosition().z <= 280.0f)) {
+			printf("VOL 1 \n");
+			Ambiental->setSoundVolume(0.2f);
+			Pos2->setSoundVolume(0.15f);
+		}
+		else {
+			Pos2->setSoundVolume(0.0f);
 		}
 
 		// Clear the window
