@@ -54,7 +54,7 @@ float angArm = 0.0f; // Para el saludo de Calamardo
 float angArmB = 0.0f; // Para que bob lance las cangreburgers 
 float movburgir = 35.8f; // Para la animación de la cangreburguer
 float angburgir = 0.0f;
-float movOffsetburgir = 0.095f;
+float movOffsetburgir = 1.2f;
 float angArmBob = 0.0f;
 float angleHead = 0.0f; // Para la cabeza de Overgrownd
 float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
@@ -1985,13 +1985,6 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 		LamparaZoo_On.RenderModel();
 	}
 
-	/*model = modelaux;
-	model = glm::translate(model, glm::vec3(-120.0f, 0.0f, 200.0f));
-	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-	LamparaZoo.RenderModel();*/
-
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-10.0f, 7.0f, 50.0f));
 	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -2009,6 +2002,13 @@ void RenderLamps(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLflo
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-120.0f, 21.0f, 273.0f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	SpotlightModel.RenderModel();
+
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-190.0f, 0.0f, -120.0f));
+	model = glm::rotate(model, glm::radians(135.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	SpotlightModel.RenderModel();
@@ -2192,12 +2192,12 @@ int main()
 
 	unsigned int spotLightCount = 0;
 	//linterna
-	spotLights[0] = SpotLight(0.0f, 0.4f, 0.0f,
+	spotLights[0] = SpotLight(0.0f, 1.0f, 1.0f,
 		1.0f, 2.0f,
-		0.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 0.0f,
-		1.0f, 0.14f, 0.07f,
-		5.0f);
+		-190.f, 2.0f, -120.0f,
+		-5.0f, 1.5f, 5.0f,
+		1.5f, 0.0f, 0.0f,
+		15.0f);
 	spotLightCount++;
 
 	spotLights[1] = SpotLight(1.0f, 1.0f, 0.8f,
@@ -2229,18 +2229,10 @@ int main()
 	movnubeYoffset = 12.0f;
 
 	//------------------SONIDO-----------------------
-	//Sonido ambiental
-	//ISoundEngine* Ambiental = createIrrKlangDevice();
-	//Ambiental->play2D("Sound/Ambiental.wav", true); 
-	//Ambiental->setSoundVolume(0.2f);
+	
 	ISoundEngine* Ambiental = createIrrKlangDevice();
 	Ambiental->play2D("Media/ambiental.mp3", true);
 	Ambiental->setSoundVolume(0.2f);
-
-	////Pista de fondo
-	//ISoundEngine* Intro = createIrrKlangDevice();
-	//Intro->play2D("Sound/Dexter_Pista.wav", true); //cambiar a cancion en loop sin la voz
-	//Intro->setSoundVolume(0.15f);
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -2346,6 +2338,10 @@ int main()
 			}
 		}
 
+		if (burgir == 0) {
+			burgir = 3;
+		}
+
 		if (!aire) { // Para el movimiento del lanzamiento de la burgir
 			if (angArmB > -40) {
 				angArmB -= 0.5f;
@@ -2357,7 +2353,7 @@ int main()
 		}
 		else {
 			if (angArmB < 25) {
-				angArmB += 1.0f;
+				angArmB += 3.0f;
 			}
 
 			if (movburgir > -110) {
@@ -2486,21 +2482,7 @@ int main()
 		glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 		glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
-	
-		// Luz spotligth que esta ligada a la bicicleta	
-
-		if (avanza) {
-			spotLights[0].SetFlash(glm::vec3(movbicix, 4.0f, movbiciz + 5.0f), glm::vec3(0.0f, -1.0f, 1.0f));
-		}
-		else if (dig) {
-			spotLights[0].SetFlash(glm::vec3(movbicix - 1.0f, 4.0f, movbiciz - 5.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
-		}
-		else if (ret) {
-			spotLights[0].SetFlash(glm::vec3(movbicix + 1.0f, 4.0f, movbiciz), glm::vec3(1.0f, -1.0f, 0.0f));
-		}
 		
-		shaderList[0].SetSpotLights(spotLights, spotLightCount);
-		shaderList[0].SetPointLights(pointLights, pointLightCount);
 		//información al shader de fuentes de iluminación
 
 		if (now >= day * n && now < day * (n + 1)) {
@@ -2529,7 +2511,6 @@ int main()
 		else if (mainWindow.getLuces() == 4.0) {
 			shaderList[0].SetPointLights(pointLights4, pointLightCount4-3);
 		}
-		
     
 		glm::mat4 model(1.0);
 		glm::mat4 modelaux(1.0);
