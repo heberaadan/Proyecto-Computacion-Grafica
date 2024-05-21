@@ -42,12 +42,11 @@ using namespace irrklang;
 #pragma comment(lib, "irrKlang.lib")
 
 // Audio
-ISoundEngine* Pos1;
-ISoundEngine* Pos2;
-
-ISound* Goku;
-ISound* Bang;
-
+ISoundEngine* Pos1 = createIrrKlangDevice();
+ISoundEngine* Pos2 = createIrrKlangDevice();
+ISoundEngine* engine = createIrrKlangDevice();
+ISoundEngine* choque = createIrrKlangDevice();
+ISoundEngine* Ambiental = createIrrKlangDevice();
 
 const float toRadians = 3.14159265f / 180.0f;
 
@@ -67,8 +66,8 @@ float movbiciz = -260.0f, movbicix = 255.0f; // Para mover la bici
 float movbiciOffset = 0.7f, rotllantaB = 0.0f; 
 float movcangre = -250.0f, rotllantaC = 0.0f; // Para mover al cangremovil
 float movOffSetC = 0.5f, rotllantaOffSetC = 8.0f, movOffsetC2 = 0.8f;
-float movM1 = 20.0f,movM2 = 10.f, scaleM = 1.0f;
-float movOffSetM = 0.08f, scalOffSetC = 0.009f;
+float movM1 = 20.0f,movM2 = 10.f, scaleM = 1.0f, rotM = 0.0f; // Para las medusas
+float movOffSetM = 0.08f, scalOffSetC = 0.009f, rotMOffset = 1.2f;
 float movnubeX = 0.0f, movnubeY = 0.0f, movnubeZ = 0.0f; // Para mover a la nube voladora
 float angleNube = 0.0f;
 float movnubeoffset, movnubeYoffset; 
@@ -1779,12 +1778,14 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-40.0f, movM1, -155.0f));
 	model = glm::scale(model, glm::vec3(scaleM, scaleM, scaleM));
+	model = glm::rotate(model, glm::radians(rotM), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Medusa.RenderModel();
 
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-50.0f, movM2, -175.0f));
 	model = glm::scale(model, glm::vec3(scaleM, scaleM, scaleM));
+	model = glm::rotate(model, glm::radians(rotM), glm::vec3(0.0f, 1.0f, 0.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Medusa.RenderModel();
 }
@@ -2024,6 +2025,7 @@ void RenderSaitama(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLu
 
 
 	if (mainWindow.getWalkFlag() == 1) {
+		engine->setSoundVolume(0.4f);
 		if (leftrot > 45.0) {
 			leftinc = -WALK_ANIM_SPEED;
 		}
@@ -2042,6 +2044,7 @@ void RenderSaitama(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLu
 		rightrot += rightinc;
 	}
 	else {
+		engine->setSoundVolume(0.0f);
 		leftrot = 0.0f;
 		rightrot = 0.0f;
 	}
@@ -2235,16 +2238,15 @@ int main()
 	movnubeYoffset = 12.0f;
 
 	//------------------SONIDO-----------------------
-	
-	ISoundEngine* Ambiental = createIrrKlangDevice();
 	Ambiental->play2D("Media/ambiental.mp3", true);
 	Ambiental->setSoundVolume(0.35f);
 
-	Pos1 = createIrrKlangDevice();
-	Pos2 = createIrrKlangDevice();
-
 	Pos1->play2D("Media/DragonBallRap.mp3", true);
-	Pos2->play2D("media/OnePunchMan.mp3",true);
+	Pos2->play2D("media/OnePunchMan.mp3", true);
+
+	// Efectos Especiales
+	choque->play2D("Media/Pasos.mp3", true);
+	engine->play2D("Media/Choque.mp3", true);
 
 	while (!mainWindow.getShouldClose())
 	{
@@ -2269,9 +2271,11 @@ int main()
 
 		if (mainWindow.getCameraSwitch()) {
 			if(cameraState) {
+
 				camaraAvatar = camera;
 				camera = camaraAerea;
 				cameraState = !cameraState;
+				engine->setSoundVolume(0.0f);
 			}
 			else {
 				camaraAerea = camera;
@@ -2304,22 +2308,22 @@ int main()
 		}
 
 		// Activa el audio posicional (BANG)
-		if ((camera.getCameraPosition().x <= 100.0f && camera.getCameraPosition().x >= 5.0f) && (camera.getCameraPosition().z >= 180.0f && camera.getCameraPosition().z <= 280.0f)) {
+		if ((camera.getCameraPosition().x <= 100.0f && camera.getCameraPosition().x >= 5.0f) && (camera.getCameraPosition().z >= 200.0f && camera.getCameraPosition().z <= 280.0f)) {
 			printf("VOL 4 \n");
 			Ambiental->setSoundVolume(0.0f);
 			Pos2->setSoundVolume(0.45f);
 		}
-		else if ((camera.getCameraPosition().x <= 124.0f && camera.getCameraPosition().x >= -19.0f) && (camera.getCameraPosition().z >= 160.0f && camera.getCameraPosition().z <= 280.0f)) {
+		else if ((camera.getCameraPosition().x <= 124.0f && camera.getCameraPosition().x >= -19.0f) && (camera.getCameraPosition().z >= 180.0f && camera.getCameraPosition().z <= 280.0f)) {
 			printf("VOL 3 \n");
 			Ambiental->setSoundVolume(0.05f);
 			Pos2->setSoundVolume(0.35f);
 		}
-		else if ((camera.getCameraPosition().x <= 148.0f && camera.getCameraPosition().x >= -43.0f) && (camera.getCameraPosition().z >= 140.0f && camera.getCameraPosition().z <= 280.0f)) {
+		else if ((camera.getCameraPosition().x <= 148.0f && camera.getCameraPosition().x >= -43.0f) && (camera.getCameraPosition().z >= 170.0f && camera.getCameraPosition().z <= 280.0f)) {
 			printf("VOL 2 \n");
 			Ambiental->setSoundVolume(0.15f);
 			Pos2->setSoundVolume(0.25f);
 		}
-		else if ((camera.getCameraPosition().x <= 172.0f && camera.getCameraPosition().x >= -67.0f) && (camera.getCameraPosition().z >= 120.0f && camera.getCameraPosition().z <= 280.0f)) {
+		else if ((camera.getCameraPosition().x <= 172.0f && camera.getCameraPosition().x >= -67.0f) && (camera.getCameraPosition().z >= 160.0f && camera.getCameraPosition().z <= 280.0f)) {
 			printf("VOL 1 \n");
 			Ambiental->setSoundVolume(0.2f);
 			Pos2->setSoundVolume(0.15f);
@@ -2341,6 +2345,8 @@ int main()
 		if (movM2 > 77.0f || movM2 < 8.0f) {
 			movM2 = 12.0f;
 		}
+
+		rotM += rotMOffset * deltaTime;
 
 		if (up1) {
 			if (movM1 < 85.0f) {
@@ -2497,9 +2503,17 @@ int main()
 			movbiciz = -259;
 		}
 
+		if ((movcangre >= 80 && movcangre <= 160) && (camera.getCameraPosition().z >= 60 && camera.getCameraPosition().z <= 200) && (camera.getCameraPosition().x >= 80 && camera.getCameraPosition().z <= 250)) {
+			choque->setSoundVolume(0.5f);
+		}
+		else {
+			choque->setSoundVolume(0.0f);
+		}
+
 		if (movcangre >= -250 && movcangre < 94) { // Para el movimiento del coche
 			movcangre += movOffSetC * deltaTime;
 			rotllantaC += rotllantaOffSetC * deltaTime;
+			
 		}
 		else if (movcangre >= 94 && movcangre < 160){
 			movcangre += movOffsetC2 * deltaTime;
