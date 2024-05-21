@@ -122,7 +122,7 @@ Model Piedra1, Piedra2, Piedra3, Piedra4, Piedra5, Patito, LamparaZoo, Kunai, Le
 Model Pato, Shuriken, Bamboo, LamparaZoo_On, LampGar, Pasto1, Saitama, Tutsumaki;
 Model Planta1, Planta2, Planta3, Planta4, Planta5, Planta6, Pasto, Medusa;
 Model SpotlightModel, PlankStage;
-Model mesa, cangre;
+Model mesa, cangre, Paso, PasoPeatonal, Mapa, Peligro;
 
 // Puertas
 Model LionGate;
@@ -495,6 +495,16 @@ void LoadModels() {
 	Porton.LoadModel("Models/Puertas/porton.obj");
 	PuertaMetal = Model();
 	PuertaMetal.LoadModel("Models/Puertas/PuertaMetalica.obj");
+
+	//Señalización 
+	Paso = Model();
+	Paso.LoadModel("Models/Decoracion/Decoracion/Paso.obj");
+	PasoPeatonal = Model();
+	PasoPeatonal.LoadModel("Models/Decoracion/Decoracion/PasoPeatonal.obj");
+	Peligro = Model();
+	Peligro.LoadModel("Models/Decoracion/Decoracion/Peligro.obj");
+	Mapa = Model();
+	Mapa.LoadModel("Models/Decoracion/Decoracion/MapaZoo.obj");
 
 }
 
@@ -1737,7 +1747,6 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	
 	model = modelaux;
 	model = glm::translate(model, glm::vec3(-10.0f, 0.0f, 20.0f));
-	//model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	PlankStage.RenderModel();
@@ -1787,6 +1796,49 @@ void RenderDecoracion(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) 
 	model = glm::scale(model, glm::vec3(scaleM, scaleM, scaleM));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 	Medusa.RenderModel();
+
+	// *********************************************************************
+		// Señalización
+	// *********************************************************************
+
+	// Mapa
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-50.0f, 0.0f, 110.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Mapa.RenderModel();
+
+	// Peligro
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-85.0f, 0.0f, -180.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Peligro.RenderModel();
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(-85.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Peligro.RenderModel();
+
+	// Paso Peatonal
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(210.0f, 0.0f, 200.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	PasoPeatonal.RenderModel();
+
+	// Paso
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(200.0f, 4.0f, 170.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Paso.RenderModel();
+	model = modelaux;
+	model = glm::translate(model, glm::vec3(200.0f, 4.0f, 180.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	Paso.RenderModel();
 }
 
 
