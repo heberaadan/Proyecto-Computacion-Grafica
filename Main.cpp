@@ -530,7 +530,11 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	casa = model;
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+	// Transparencia de ventanas
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	CasaBob.RenderModel();
+	glDisable(GL_BLEND);
 
 	model = casa;
 	model = glm::scale(model, glm::vec3(6.0f, 6.0f, 6.0f));
@@ -551,7 +555,12 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.7f, 1.7f, 1.7f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	CasaCalamardo.RenderModel();
+	glDisable(GL_BLEND);
+	
 
 	// *********************************************************************
 			// Kame House
@@ -573,7 +582,12 @@ void RenderEdificios(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel) {
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.7f, 1.0f));
 	glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	CasaSaitama.RenderModel();
+	glDisable(GL_BLEND);
+	
 }
 
 void RenderPersonajes(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLfloat now) {
@@ -2077,8 +2091,9 @@ void RenderSaitama(glm::mat4 model, glm::mat4 modelaux, GLuint uniformModel, GLu
 
 
 	if (mainWindow.getWalkFlag() == 1) {
-		engine->setSoundVolume(0.4f);
-		if (leftrot > 45.0) {
+		engine->setSoundVolume(0.9f);
+		Ambiental->setSoundVolume(0.45f);
+		if (leftrot > 55.0) {
 			leftinc = -WALK_ANIM_SPEED;
 		}
 		else if(leftrot < -45){
@@ -2338,7 +2353,7 @@ int main()
 		}
 		
 		// Activa el audio posicional (GOKU)
-		printf("x: %f z: %f \n", camera.getCameraPosition().x, camera.getCameraPosition().z);
+		//printf("x: %f z: %f \n", camera.getCameraPosition().x, camera.getCameraPosition().z);
 		if ((camera.getCameraPosition().x <= -210.0f && camera.getCameraPosition().x >= -255.0f) && (camera.getCameraPosition().z >= -280.0f && camera.getCameraPosition().z <= -210.0f)) {
 			Ambiental->setSoundVolume(0.0f);
 			Pos1->setSoundVolume(0.45f);
@@ -2356,6 +2371,7 @@ int main()
 			Pos1->setSoundVolume(0.15f);
 		}
 		else {
+			Ambiental->setSoundVolume(0.45f);
 			Pos1->setSoundVolume(0.0f);
 		}
 
@@ -2381,6 +2397,7 @@ int main()
 			Pos2->setSoundVolume(0.15f);
 		}
 		else {
+			Ambiental->setSoundVolume(0.45f);
 			Pos2->setSoundVolume(0.0f);
 		}
 
